@@ -55,9 +55,10 @@ class UserController extends AdminController
         $show = new Show(User::findOrFail($id));
 
 //        $show->field('id', __('Id'));
-        $show->field('openid', __('Openid'));
         $show->field('nickname', __('昵称'));
-        $show->field('head_url', __('头像'));
+        $show->field('openid', __('Openid'));
+//        $show->field('head_url', __('头像'));
+        $show->head_url('头像')->image();
         $show->field('mobile', __('手机号'));
         $show->field('email', __('邮箱'));
         $show->field('created_at', __('创建时间'));
@@ -77,10 +78,11 @@ class UserController extends AdminController
         $form = new Form(new User);
 
 //        $form->text('openid', __('Openid'));
-        $form->text('nickname', __('Nickname'));
-        $form->text('head_url', __('Head url'));
-        $form->mobile('mobile', __('Mobile'));
-        $form->email('email', __('Email'));
+        $form->text('nickname', __('昵称'))->readonly();
+//        $form->text('head_url', __('头像'))->readonly();
+        $form->image('head_url','头像');
+        $form->mobile('mobile', __('手机号'));
+        $form->email('email', __('邮箱'));
 
         return $form;
     }
