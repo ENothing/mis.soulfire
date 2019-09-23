@@ -29,7 +29,7 @@ class UserController extends AdminController
 //        $grid->column('id', __('Id'));
         $grid->column('nickname', __('昵称'));
         $grid->column('openid', __('Openid'));
-        $grid->column('head_url', __('头像'));
+        $grid->column('head_url','头像')->image('',95,95);
         $grid->column('mobile', __('手机号'));
         $grid->column('email', __('邮箱'));
         $grid->column('created_at', __('创建时间'));

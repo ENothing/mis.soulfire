@@ -58,12 +58,12 @@ return [
 
         'soulfire' => [
             'driver' => 'mysql',
-            'host' => env('API_SOULFIRE_DB_HOST', '127.0.0.1'),
-            'port' => env('API_SOULFIRE_DB_PORT', '3306'),
-            'database' => env('API_SOULFIRE_DB_DATABASE', 'forge'),
-            'username' => env('API_SOULFIRE_DB_USERNAME', 'forge'),
-            'password' => env('API_SOULFIRE_DB_PASSWORD', ''),
-            'unix_socket' => env('API_SOULFIRE_DB_SOCKET', ''),
+            'host' => env('MIS_SOULFIRE_DB_HOST', '127.0.0.1'),
+            'port' => env('MIS_SOULFIRE_DB_PORT', '3306'),
+            'database' => env('MIS_SOULFIRE_DB_DATABASE', 'forge'),
+            'username' => env('MIS_SOULFIRE_DB_USERNAME', 'forge'),
+            'password' => env('MIS_SOULFIRE_DB_PASSWORD', ''),
+            'unix_socket' => env('MIS_SOULFIRE_DB_SOCKET', ''),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
