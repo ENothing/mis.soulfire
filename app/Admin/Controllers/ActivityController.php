@@ -27,18 +27,20 @@ class ActivityController extends AdminController
     {
         $grid = new Grid(new Activity);
 
-        $grid->column('id', __('Id'));
+//        $grid->column('id', __('Id'));
         $grid->column('title', __('标题'));
-        $grid->column('thumb', __('封面'));
-        $grid->column('cate_id', __('活动分类'));
-        $grid->column('content', __('内容'));
+        $grid->column('thumb', __('封面'))->image('', 150, 150);;
+//        $grid->column('cate_id', __('活动分类'));
+        $grid->activity_cate()->name(__('活动类型'));
+//        $grid->column('content', __('内容'));
+        $grid->column('person_limit', __('人数限制'));
+        $grid->column('view', __('浏览数'));
+        $grid->column('like', __('点赞数'));
         $grid->column('start_at', __('开始时间'));
         $grid->column('end_at', __('结束时间'));
         $grid->column('start_enter_at', __('开始报名时间'));
         $grid->column('end_enter_at', __('结束报名时间'));
-        $grid->column('person_limit', __('人数限制'));
-        $grid->column('view', __('浏览数'));
-        $grid->column('like', __('点赞数'));
+
         $grid->column('created_at', __('创建时间'));
         $grid->column('updated_at', __('更新时间'));
 
@@ -55,11 +57,13 @@ class ActivityController extends AdminController
     {
         $show = new Show(Activity::findOrFail($id));
 
-        $show->field('id', __('Id'));
+//        $show->field('id', __('Id'));
         $show->field('title', __('标题'));
-        $show->field('thumb', __('封面'));
-        $show->field('cate_id', __('活动分类'));
-        $show->field('content', __('内容'));
+        $show->field('thumb', __('封面'))->image('',250,250);
+        $show->cate_id(__('活动分类'))->as(function ($cate_id){
+            return ActivityCate::find($cate_id)->name;
+        });
+        $show->field('content', __('内容'))->unescape();
         $show->field('start_at', __('开始时间'));
         $show->field('end_at', __('结束时间'));
         $show->field('start_enter_at', __('开始报名时间'));
