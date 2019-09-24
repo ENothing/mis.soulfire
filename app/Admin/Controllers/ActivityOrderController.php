@@ -108,7 +108,9 @@ class ActivityOrderController extends AdminController
         $form->select('user_id', __('用户昵称'))->options(User::all()->pluck("nickname","id"))->readOnly();
         $form->select('activity_id', __('活动标题'))->options(Activity::all()->pluck("title","id"))->readOnly();
         $form->text('name', __('姓名'))->readonly();
-        $form->radio('sex', __('性别'))->options(['1' => '男', '2'=> '女'])->readonly();
+        $form->display('sex', __('性别'))->with(function ($sex){
+            return $sex == 1?'男':'女';
+        })->readOnly();
         $form->mobile('mobile', __('手机号'))->readonly();
         $form->decimal('unit_price', __('单价'))->default(0.00)->readonly();
         $form->number('person_num', __('人数'))->default(1)->readonly();
