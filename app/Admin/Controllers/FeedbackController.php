@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Models\Feedback;
+use App\Models\User;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -27,9 +28,9 @@ class FeedbackController extends AdminController
         $grid = new Grid(new Feedback);
 
         $grid->column('id', __('Id'));
+        $grid->user('user_id')->nickname(__('用户昵称'));
         $grid->column('title', __('标题'));
         $grid->column('content', __('内容'));
-        $grid->column('user_id', __('User id'));
         $grid->column('created_at', __('创建时间'));
         $grid->column('updated_at', __('更新时间'));
 
@@ -47,9 +48,9 @@ class FeedbackController extends AdminController
         $show = new Show(Feedback::findOrFail($id));
 
         $show->field('id', __('Id'));
+        $show->user('user_id')->nickname(__('用户昵称'));
         $show->field('title', __('标题'));
         $show->field('content', __('内容'));
-        $show->field('user_id', __('User id'));
         $show->field('created_at', __('创建时间'));
         $show->field('updated_at', __('更新时间'));
 
@@ -65,9 +66,13 @@ class FeedbackController extends AdminController
     {
         $form = new Form(new Feedback);
 
-        $form->number('user_id', __('User id'));
-        $form->text('title', __('标题'));
-        $form->text('content', __('内容'));
+        $form->display('user_id', __('User id'))->with(function ($user_id){
+
+            return User::find($user_id)->nickname;
+
+        });
+        $form->text('title', __('标题'))->readonly();
+        $form->text('content', __('内容'))->readonly();
 
         return $form;
     }

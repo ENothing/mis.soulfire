@@ -17,5 +17,23 @@
  * Admin::js('/packages/prettydocs/js/main.js');
  *
  */
+use Encore\Admin\Grid;
+use Encore\Admin\Form;
 
-Encore\Admin\Form::forget(['map']);
+Form::forget(['map']);
+
+Grid::init(function (Grid $grid) {
+
+    $grid->actions(function (Grid\Displayers\Actions $actions) {
+        $actions->disableView();
+    });
+});
+
+Form::init(function (Form $form) {
+
+    $form->disableViewCheck();
+
+    $form->tools(function (Form\Tools $tools) {
+        $tools->disableView();
+    });
+});

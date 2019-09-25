@@ -2,7 +2,10 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Level;
 use App\Models\ShopGoods;
+use App\Models\ShopGoodsBrand;
+use App\Models\ShopGoodsCate;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -27,18 +30,20 @@ class ShopGoodsController extends AdminController
         $grid = new Grid(new ShopGoods);
 
         $grid->column('id', __('Id'));
-        $grid->column('cate_id', __('Cate id'));
-        $grid->column('brand_id', __('Brand id'));
         $grid->column('name', __('商品名称'));
-        $grid->column('thumb', __('封面'));
-        $grid->column('banners', __('商品banner'));
-        $grid->column('goods_content', __('商品内容'));
+        $grid->shop_goods_cate('cate_id')->name(__('商品分类'));
+        $grid->shop_goods_brand('brand_id')->name(__('品牌分类'));
+        $grid->column('thumb', __('封面'))->image('', 150, 150);
         $grid->column('cur_price', __('现价'));
         $grid->column('ori_price', __('原价'));
         $grid->column('stock', __('库存'));
         $grid->column('sold', __('已售'));
-        $grid->column('is_level', __('是否参与等级'));
-        $grid->column('level_id', __('Level id'));
+        $grid->column('is_level', __('是否参与等级'))->display(function ($is_level) {
+
+            return $is_level == 0 ? "否" : "是";
+
+        });
+        $grid->level('level_id')->name(__('等级名称'));
         $grid->column('created_at', __('创建时间'));
         $grid->column('updated_at', __('更新时间'));
 
@@ -83,18 +88,29 @@ class ShopGoodsController extends AdminController
     {
         $form = new Form(new ShopGoods);
 
-        $form->number('cate_id', __('Cate id'));
-        $form->number('brand_id', __('Brand id'));
+
+        // 在这一列中加入表单项
+
         $form->text('name', __('商品名称'));
-        $form->text('thumb', __('封面'));
-        $form->textarea('banners', __('商品banner'));
-        $form->textarea('goods_content', __('商品内容'));
+        $form->select('cate_id', __('商品分类'))->options(ShopGoodsCate::all()->pluck("name", "id"))->load('brand_id', '/api/brands');
+        $form->select('brand_id', __('品牌分类'))->options(ShopGoodsBrand::all()->pluck("name", "id"));
+        $form->image('thumb', __('封面'));
+        $form->multipleImage('banners', __('商品banner'))->removable()->sortable();
         $form->decimal('cur_price', __('现价'))->default(0.00);
         $form->decimal('ori_price', __('原价'))->default(0.00);
-        $form->number('stock', __('库存'))->default(0);
-        $form->number('sold', __('已售'))->default(0);
-        $form->number('is_level', __('是否参与等级'));
-        $form->number('level_id', __('Level id'));
+        $form->number('stock', __('库存'))->default(0)->min(0);
+        $form->number('sold', __('已售'))->default(0)->min(0);
+        $form->radio('is_level', __('是否参与等级'))->options(['1' => '是', '0' => '否'])->default('0');
+        $form->select('level_id', __('等级'))->options(Level::all()->pluck("name", 'id'));
+
+        $form->hasMany("shop_goods_spu", __('规格'), function (Form\NestedForm $form) {
+            $form->text('name', __('规格名'));
+            $form->decimal('price', __('价格'));
+            $form->number('stock', __('库存'))->min(0);
+        });
+
+        $form->editor('goods_content', __('商品内容'));
+
 
         return $form;
     }

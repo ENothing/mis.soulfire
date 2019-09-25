@@ -29,6 +29,12 @@ class ActivityOrder extends AppModel
         return $this->belongsTo(Activity::class,'activity_id','id');
     }
 
+    public function activity_pay_log()
+    {
+        return $this->hasOne(ActivityPayLog::class,"order_id","id");
+
+    }
+
 //    public function getSexAttribute($value)
 //    {
 //        return $value == 1 ? '男':'女';

@@ -77,22 +77,77 @@ class ActivityOrderController extends AdminController
     {
         $show = new Show(ActivityOrder::findOrFail($id));
 
-        $show->field('id', __('Id'));
-        $show->field('user_id', __('User id'));
-        $show->field('activity_id', __('Activity id'));
+        $show->field('user_id', __('用户昵称'))->as(function ($user_id){
+
+            return User::find($user_id)->nickname;
+
+        });
+        $show->field('activity_id', __('活动标题'))->as(function ($activity_id){
+
+            return Activity::find($activity_id)->title;
+
+        });
         $show->field('order_sn', __('订单编号'));
         $show->field('name', __('姓名'));
-        $show->field('sex', __('性别'));
+
+        $show->sex(__('性别'))->using(['2' => '女', '1' => '男']);
         $show->field('mobile', __('手机号'));
         $show->field('unit_price', __('单价'));
         $show->field('person_num', __('人数'));
         $show->field('total_price', __('总价'));
         $show->field('discount_price', __('折扣金额'));
         $show->field('real_price', __('实际支付'));
-        $show->field('status', __('订单状态'));
+        $show->field('status', __('订单状态'))->as(function ($val){
+
+            switch ($val) {
+                case 0:
+                    $status = "待付款";
+                    break;
+                case 1:
+                    $status = "已付款";
+                    break;
+                case 2:
+                    $status = "已完成";
+                    break;
+                case 3:
+                    $status = "已取消";
+                    break;
+                case 4:
+                    $status = "发起退款";
+                    break;
+                case 5:
+                    $status = "退款完成";
+                    break;
+                case 6:
+                    $status = "退款失败";
+                    break;
+                default:
+                    $status = "订单状态不存在";
+            }
+
+            return $status;
+
+
+        });
         $show->field('created_at', __('创建时间'));
         $show->field('updated_at', __('更新时间'));
+        $show->panel()
+            ->tools(function ($tools) {
+                $tools->disableDelete();
+            });;
+        $show->activity_pay_log('支付记录', function ($activity_pay_log) {
 
+            $activity_pay_log->pay_sn(__('支付单号'));
+            $activity_pay_log->status(__('支付状态'));
+            $activity_pay_log->created_at(__('创建时间'));
+            $activity_pay_log->updated_at(__('更新时间'));
+            $activity_pay_log->panel()
+                ->tools(function ($tools) {
+                    $tools->disableEdit();
+                    $tools->disableList();
+                    $tools->disableDelete();
+                });;
+        });
         return $show;
     }
 
@@ -104,7 +159,12 @@ class ActivityOrderController extends AdminController
     protected function form()
     {
         $form = new Form(new ActivityOrder);
+        $form->tools(function (Form\Tools $tools) {
 
+            // 去掉`删除`按钮
+            $tools->disableDelete();
+
+        });
         $form->select('user_id', __('用户昵称'))->options(User::all()->pluck("nickname","id"))->readOnly();
         $form->select('activity_id', __('活动标题'))->options(Activity::all()->pluck("title","id"))->readOnly();
         $form->text('name', __('姓名'))->readonly();
@@ -113,12 +173,51 @@ class ActivityOrderController extends AdminController
         })->readOnly();
         $form->mobile('mobile', __('手机号'))->readonly();
         $form->decimal('unit_price', __('单价'))->default(0.00)->readonly();
-        $form->number('person_num', __('人数'))->default(1)->readonly();
+        $form->text('person_num', __('人数'))->readonly();
         $form->decimal('total_price', __('总价'))->default(0.00)->readonly();
         $form->decimal('discount_price', __('折扣金额'))->default(0.00)->readonly();
         $form->decimal('real_price', __('实际支付'))->default(0.00)->readonly();
-        $form->number('status', __('订单状态'));
+        $form->display('status', __('订单状态'))->with(function ($val) {
 
+            switch ($val) {
+                case 0:
+                    $status = "待付款";
+                    break;
+                case 1:
+                    $status = "已付款";
+                    break;
+                case 2:
+                    $status = "已完成";
+                    break;
+                case 3:
+                    $status = "已取消";
+                    break;
+                case 4:
+                    $status = "发起退款";
+                    break;
+                case 5:
+                    $status = "退款完成";
+                    break;
+                case 6:
+                    $status = "退款失败";
+                    break;
+                default:
+                    $status = "订单状态不存在";
+            }
+
+            return $status;
+
+
+        });
+        $form->footer(function ($footer) {
+
+            // 去掉`重置`按钮
+            $footer->disableReset();
+
+            // 去掉`继续创建`checkbox
+            $footer->disableCreatingCheck();
+
+        });
         return $form;
     }
 }

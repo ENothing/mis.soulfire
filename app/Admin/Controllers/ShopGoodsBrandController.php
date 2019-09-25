@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Models\ShopGoodsBrand;
+use App\Models\ShopGoodsCate;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -27,9 +28,12 @@ class ShopGoodsBrandController extends AdminController
         $grid = new Grid(new ShopGoodsBrand);
 
         $grid->column('id', __('Id'));
-        $grid->column('logo', __('Logo'));
-        $grid->column('cate_id', __('所属商品分类'));
         $grid->column('name', __('品牌名称'));
+        $grid->column('cate_id', __('所属商品分类'))->display(function ($cate_id){
+            return ShopGoodsCate::find($cate_id)->name;
+
+        });
+        $grid->column('logo', __('Logo'))->image('',100,100);
 
         return $grid;
     }
@@ -61,8 +65,8 @@ class ShopGoodsBrandController extends AdminController
     {
         $form = new Form(new ShopGoodsBrand);
 
-        $form->text('logo', __('Logo'));
-        $form->number('cate_id', __('所属商品分类'));
+        $form->image('logo', __('Logo'));
+        $form->select('cate_id', __('所属商品分类'))->options(ShopGoodsCate::all()->pluck("name","id"));
         $form->text('name', __('品牌名称'));
 
         return $form;

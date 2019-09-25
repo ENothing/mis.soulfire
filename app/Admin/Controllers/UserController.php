@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Models\User;
+use App\Models\UserLevel;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -29,6 +30,13 @@ class UserController extends AdminController
 //        $grid->column('id', __('Id'));
         $grid->column('nickname', __('昵称'));
         $grid->column('openid', __('Openid'));
+        $grid->column('level',__('等级'))->display(function () {
+
+            $level = UserLevel::with("level")->where('user_id',$this->id)->first();
+
+            return $level->level->name;
+
+        });
         $grid->column('head_url','头像')->image('',95,95);
         $grid->column('mobile', __('手机号'));
         $grid->column('email', __('邮箱'));

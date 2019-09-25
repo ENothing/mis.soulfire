@@ -15,7 +15,7 @@ class LevelController extends AdminController
      *
      * @var string
      */
-    protected $title = 'App\Models\Level';
+    protected $title = '等级管理';
 
     /**
      * Make a grid builder.

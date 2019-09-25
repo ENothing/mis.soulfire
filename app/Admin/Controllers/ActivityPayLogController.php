@@ -27,13 +27,19 @@ class ActivityPayLogController extends AdminController
         $grid = new Grid(new ActivityPayLog);
 
         $grid->column('id', __('Id'));
-        $grid->column('order_id', __('Order id'));
+        $grid->activity_order()->order_sn(__('订单编号'));
         $grid->column('pay_sn', __('支付单号'));
         $grid->column('price', __('金额'));
-        $grid->column('status', __('支付状态'));
+        $grid->column('status', __('支付状态'))->display(function ($status){
+
+            return $status == 0 ? "未支付": $status == 1 ? "已支付":"支付失败";
+
+        });
         $grid->column('created_at', __('创建时间'));
         $grid->column('updated_at', __('更新时间'));
-
+        $grid->disableCreateButton();
+        $grid->disableRowSelector();
+        $grid->disableActions();
         return $grid;
     }
 
@@ -48,7 +54,7 @@ class ActivityPayLogController extends AdminController
         $show = new Show(ActivityPayLog::findOrFail($id));
 
         $show->field('id', __('Id'));
-        $show->field('order_id', __('Order id'));
+        $show->field('order_id', __('Order id'))->as();
         $show->field('pay_sn', __('支付单号'));
         $show->field('price', __('金额'));
         $show->field('status', __('支付状态'));
@@ -67,7 +73,7 @@ class ActivityPayLogController extends AdminController
     {
         $form = new Form(new ActivityPayLog);
 
-        $form->number('order_id', __('Order id'));
+        $form->text('order_id', __('Order id'));
         $form->text('pay_sn', __('支付单号'))->readonly();
         $form->decimal('price', __('金额'))->default(0.00)->readonly();
         $form->number('status', __('支付状态'));

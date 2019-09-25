@@ -32,3 +32,15 @@ Route::group([
     $router->resource('shop_orders', 'ShopOrderController');
     $router->resource('shop_order_pay_logs', 'ShopOrderPayLogController');
 });
+
+Route::group([
+    'prefix'        => 'api',
+    'namespace'     => 'App\Admin\Api',
+], function (Router $router) {
+
+    $router->get('/brands', 'GoodsCateController@brand');
+
+});
+
+
+
