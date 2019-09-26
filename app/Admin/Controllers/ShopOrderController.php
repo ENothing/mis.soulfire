@@ -3,10 +3,14 @@
 namespace App\Admin\Controllers;
 
 use App\Models\ShopOrder;
+use App\Models\User;
+use App\Models\UserCoupon;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Widgets\Table;
+
 
 class ShopOrderController extends AdminController
 {
@@ -29,19 +33,38 @@ class ShopOrderController extends AdminController
         $grid->column('id', __('Id'));
         $grid->column('user_id', __('User id'));
         $grid->column('order_sn', __('订单编号'));
-        $grid->column('user_coupon_id', __('User coupon id'));
         $grid->column('num', __('商品总数'));
 //        $grid->column('unit_price', __('Unit price'));
         $grid->column('total_price', __('总价'));
         $grid->column('real_price', __('实际支付'));
         $grid->column('discount_price', __('折扣金额'));
-        $grid->column('status', __('订单状态'));
+//        $grid->column('status', __('订单状态'));
+
+
+
+
+        $grid->column('status', __('订单状态'))->using([
+            0 => '待付款',
+            1 => '订单取消',
+            2 => '已付款待发货 ',
+            3 => '已发货待收货 ',
+            4 => '已完成',
+        ], '未知')->dot([
+            0 => 'info',
+            1 => 'default',
+            2 => 'warning',
+            3 => 'primary',
+            4 => 'success',
+        ], 'danger');
         $grid->column('name', __('姓名'));
         $grid->column('mobile', __('手机号'));
-        $grid->column('province', __('省'));
-        $grid->column('city', __('市'));
-        $grid->column('district', __('区'));
-        $grid->column('detail_address', __('详细地址'));
+        $grid->column("address" ,__('收货地址'))->display(function () {
+            return $this->province . $this->city . $this->district . $this->detail_address;
+        });
+//        $grid->column('province', __('省'));
+//        $grid->column('city', __('市'));
+//        $grid->column('district', __('区'));
+//        $grid->column('detail_address', __('详细地址'));
         $grid->column('created_at', __('创建时间'));
         $grid->column('updated_at', __('更新时间'));
 //        $grid->column('deleted_at', __('Deleted at'));
@@ -90,21 +113,99 @@ class ShopOrderController extends AdminController
     {
         $form = new Form(new ShopOrder);
 
-        $form->number('user_id', __('User id'));
-        $form->text('order_sn', __('订单编号'))->readonly();
-        $form->number('user_coupon_id', __('User coupon id'));
-        $form->number('num', __('商品总数'))->default(1)->readonly();
+        $form->column(1/2, function ($form) {
+
+            $form->text('order_sn', __('订单编号'))->readonly();
+            $form->select('user_id', __('用户昵称'))->options(User::all()->pluck("nickname",'id'))->readonly();
+            $form->display('user_coupon_id', __('User coupon id'))->with(function ($user_coupon_id){
+
+                if ($user_coupon_id == 0){
+
+                    return "未使用优惠券";
+
+                }
+
+                $user_coupon = UserCoupon::with('coupon')->find($user_coupon_id);
+
+                switch ($user_coupon->coupon_type){
+                    case 1:
+                        return "满 ".$user_coupon->full_price . " 减 ".$user_coupon->reduction_price;
+                    case 2:
+                        return "立减 ".$user_coupon->immediately_price;
+                    case 3:
+                        return $user_coupon->discount." 折";
+                }
+
+            });
+            $form->display('num', __('商品总数'));
 //        $form->decimal('unit_price', __('Unit price'))->default(0.00);
-        $form->decimal('total_price', __('总价'))->default(0.00)->readonly();
-        $form->decimal('real_price', __('实际支付'))->default(0.00)->readonly();
-        $form->decimal('discount_price', __('折扣金额'))->default(0.00)->readonly();
-        $form->number('status', __('订单状态'))->readonly();
-        $form->text('name', __('姓名'))->readonly();
-        $form->mobile('mobile', __('手机号'))->readonly();
-        $form->text('province', __('省'))->readonly();
-        $form->text('city', __('市'))->readonly();
-        $form->text('district', __('区'))->readonly();
-        $form->text('detail_address', __('详细地址'))->readonly();
+            $form->decimal('total_price', __('总价'))->default(0.00)->readonly();
+            $form->decimal('discount_price', __('折扣金额'))->default(0.00)->readonly();
+            $form->decimal('real_price', __('实际支付'))->default(0.00)->readonly();
+            $form->display('status', __('订单状态'))->with(function ($val){
+
+                $status = "";
+
+
+                switch ($val){
+                    case 0:
+                        $status = "待付款";
+                        break;
+                    case 1:
+                        $status = "订单取消";
+                        break;
+                    case 2:
+                        $status = "已付款待发货";
+                        break;
+                    case 3:
+                        $status = "已发货待收货";
+                        break;
+                    case 4:
+                        $status = "已收货完成";
+                        break;
+                }
+
+                return $status;
+
+
+            });
+            $form->text('name', __('姓名'));
+            $form->mobile('mobile', __('手机号'));
+            $form->text('province', __('省'));
+            $form->text('city', __('市'));
+            $form->text('district', __('区'));
+            $form->text('detail_address', __('详细地址'));
+        });
+
+        $form->column(1/2, function ($form) {
+            $form->hasMany('shop_order_goods_with_goods', __('商品'), function (Form\NestedForm $form) {
+                $form->display('shop_goods.thumb',__('商品封面'))->with(function ($thumb){
+                    return '<img src="'.env('APP_URL').'/storage/'. $thumb.'" style="width:100px;height:100px">';
+                });
+                $form->text('shop_goods.name',__('商品名称'))->readonly();
+                $form->display('num',__('数量'));
+                $form->text('shop_goods_spu.name',__('商品规格'))->readonly();
+                $form->text('shop_goods_spu.price',__('商品价格'))->readonly();
+
+            })->disableDelete()->disableCreate();
+        });
+
+        $form->tools(function (Form\Tools $tools) {
+            // 去掉`删除`按钮
+            $tools->disableDelete();
+        });
+        $form->footer(function ($footer) {
+            // 去掉`重置`按钮
+            $footer->disableReset();
+            // 去掉`提交`按钮
+            $footer->disableSubmit();
+            // 去掉`查看`checkbox
+            $footer->disableViewCheck();
+            // 去掉`继续编辑`checkbox
+            $footer->disableEditingCheck();
+            // 去掉`继续创建`checkbox
+            $footer->disableCreatingCheck();
+        });
 
         return $form;
     }

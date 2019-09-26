@@ -7,6 +7,7 @@ class ShopGoods extends AppModel
 {
     //
     protected $table = "shop_goods";
+    protected $fillable = [];
 
     public function setBannersAttribute($val)
     {
@@ -42,5 +43,14 @@ class ShopGoods extends AppModel
         return $this->belongsTo(Level::class,"level_id","id");
         
     }
+
+    public function shop_order_goods()
+    {
+
+        return $this->belongsTo(ShopOrderGoods::class,"id","goods_id");
+
+    }
+
+
 
 }
