@@ -25,13 +25,15 @@ class BannerCateController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new BannerCate);
-
+        $grid->disableFilter();
+        $grid->disableExport();
         $grid->column('id', __('Id'));
         $grid->column('name', __('类名'));
         $grid->actions(function ($actions) {
 
             // 去掉删除
             $actions->disableDelete();
+            $actions->disableView();
 
         });
         return $grid;

@@ -25,15 +25,24 @@ class ShopOrderPayLogController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new ShopOrderPayLog);
-
+        $grid->disableCreateButton();
+        $grid->disableRowSelector();
         $grid->column('id', __('Id'));
-        $grid->column('order_id', __('Order id'));
-        $grid->column('pay_sn', __('支付单号'));
+        $grid->shop_order('order_id', __('Order id'))->order_n(__('订单编号'));
+        $grid->column('pay_n', __('支付单号'));
         $grid->column('price', __('金额'));
-        $grid->column('status', __('支付状态'));
+        $grid->column('status', __('支付状态'))->using([
+            0 => '待支付',
+            1 => '支付成功',
+            2 => '支付失败',
+        ], '未知')->dot([
+            0 => 'warning',
+            1 => 'success',
+            2 => 'danger',
+        ], 'danger');
         $grid->column('created_at', __('创建时间'));
         $grid->column('updated_at', __('更新时间'));
-
+        $grid->disableActions();
         return $grid;
     }
 

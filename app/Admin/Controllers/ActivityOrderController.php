@@ -31,7 +31,7 @@ class ActivityOrderController extends AdminController
 //        $grid->column('id', __('Id'));
         $grid->user()->nickname(__('用户昵称'));
         $grid->activity()->title(__('活动标题'));
-        $grid->column('order_sn', __('订单编号'));
+        $grid->column('order_n', __('订单编号'));
         $grid->column('name', __('姓名'));
         $grid->column('sex', __('性别'))->display(function ($sex){
             return $sex == 1 ? '男':'女';
@@ -87,7 +87,7 @@ class ActivityOrderController extends AdminController
             return Activity::find($activity_id)->title;
 
         });
-        $show->field('order_sn', __('订单编号'));
+        $show->field('order_n', __('订单编号'));
         $show->field('name', __('姓名'));
 
         $show->sex(__('性别'))->using(['2' => '女', '1' => '男']);

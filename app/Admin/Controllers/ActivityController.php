@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Models\Activity;
 use App\Models\ActivityCate;
+use App\Models\ArticleCate;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -26,22 +27,33 @@ class ActivityController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Activity);
+        $grid->filter(function($filter){
 
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+            $filter->expand();
+            // 在这里添加字段过滤器
+            $filter->like('title',__('标题'));
+            $filter->equal('cate_id',__('活动类型'))->select(ArticleCate::all()->pluck("name","id"));
+            $filter->between('start_at',  __('开始时间'))->datetime();
+            $filter->between('start_enter_at', __('开始报名时间'))->datetime();
+            $filter->between('created_at', __('结束报名时间'))->datetime();
+        });
 //        $grid->column('id', __('Id'));
         $grid->column('title', __('标题'));
-        $grid->column('thumb', __('封面'))->image('', 150, 150);;
+        $grid->column('thumb', __('封面'))->image('', 150, 150);
 //        $grid->column('cate_id', __('活动分类'));
         $grid->activity_cate()->name(__('活动类型'));
 //        $grid->column('content', __('内容'));
         $grid->column('person_limit', __('人数限制'));
-        $grid->column('view', __('浏览数'));
-        $grid->column('like', __('点赞数'));
+        $grid->column('view', __('浏览数'))->sortable();
+        $grid->column('like', __('点赞数'))->sortable();
         $grid->column('start_at', __('开始时间'));
         $grid->column('end_at', __('结束时间'));
         $grid->column('start_enter_at', __('开始报名时间'));
         $grid->column('end_enter_at', __('结束报名时间'));
 
-        $grid->column('created_at', __('创建时间'));
+        $grid->column('created_at', __('创建时间'))->sortable();
         $grid->column('updated_at', __('更新时间'));
 
         return $grid;

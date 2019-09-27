@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Models\Banner;
+use App\Models\BannerCate;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -15,7 +16,7 @@ class BannerController extends AdminController
      *
      * @var string
      */
-    protected $title = 'App\Models\Banner';
+    protected $title = '轮播管理';
 
     /**
      * Make a grid builder.
@@ -25,8 +26,10 @@ class BannerController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Banner);
-
+        $grid->disableFilter();
+        $grid->disableExport();
         $grid->column('id', __('Id'));
+        $grid->banner_cate('id')->name(__('分类'));
         $grid->column('thumb','图片')->image('',150,250);
         $grid->column('url', __('链接'))->link();
         $grid->column('created_at', __('创建时间'));
@@ -63,6 +66,7 @@ class BannerController extends AdminController
     {
         $form = new Form(new Banner);
 
+        $form->select('cate_id', __('分类'))->options(BannerCate::all()->pluck("name","id"));
         $form->image('thumb', __('图片'));
         $form->url('url', __('链接'));
 

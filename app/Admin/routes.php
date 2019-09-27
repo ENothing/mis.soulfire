@@ -31,6 +31,8 @@ Route::group([
     $router->resource('shop_goods_cates', 'ShopGoodsCateController');
     $router->resource('shop_orders', 'ShopOrderController');
     $router->resource('shop_order_pay_logs', 'ShopOrderPayLogController');
+    $router->resource('shop_order_refunds', 'ShopOrderRefundController');
+    $router->resource('user_invite_logs', 'UserInviteLogController');
 });
 
 Route::group([

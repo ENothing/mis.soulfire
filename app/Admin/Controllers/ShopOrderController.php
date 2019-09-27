@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Models\ShopOrder;
+use App\Models\ShopOrderRefund;
 use App\Models\User;
 use App\Models\UserCoupon;
 use Encore\Admin\Controllers\AdminController;
@@ -31,31 +32,44 @@ class ShopOrderController extends AdminController
         $grid = new Grid(new ShopOrder);
 
         $grid->column('id', __('Id'));
-        $grid->column('user_id', __('User id'));
-        $grid->column('order_sn', __('订单编号'));
+        $grid->user('user_id', __('User id'))->nickname( __('用户昵称'));
+        $grid->column('order_n', __('订单编号'));
         $grid->column('num', __('商品总数'));
 //        $grid->column('unit_price', __('Unit price'));
         $grid->column('total_price', __('总价'));
         $grid->column('real_price', __('实际支付'));
         $grid->column('discount_price', __('折扣金额'));
-//        $grid->column('status', __('订单状态'));
 
+        $grid->column("status", __('订单状态'))->display(function ($status){
 
+           $order_refund = ShopOrderRefund::find($this->refund_id);
+           if ($order_refund && $order_refund->status != ShopOrderRefund::CANCEL_REFUND && $order_refund->status != ShopOrderRefund::FAILD_REFUND){
+               switch ($order_refund->status){
+                   case 0:
+                       return '<span class="label-info" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;发起退款';
+                   case 2:
+                       return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;退款中';
+                   case 3:
+                       return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;完成退款';
+               }
+           }
 
+           switch ($status){
+               case 0:
+                   return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;待付款';
+               case 1:
+                   return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;订单取消';
+               case 2:
+                   return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已付款待发货';
+               case 3:
+                   return '<span class="label-primary" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已发货待收货';
+               case 4:
+                   return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已完成';
+               default:
+                   return '<span class="label-danger" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;未知';
+           }
+        });
 
-        $grid->column('status', __('订单状态'))->using([
-            0 => '待付款',
-            1 => '订单取消',
-            2 => '已付款待发货 ',
-            3 => '已发货待收货 ',
-            4 => '已完成',
-        ], '未知')->dot([
-            0 => 'info',
-            1 => 'default',
-            2 => 'warning',
-            3 => 'primary',
-            4 => 'success',
-        ], 'danger');
         $grid->column('name', __('姓名'));
         $grid->column('mobile', __('手机号'));
         $grid->column("address" ,__('收货地址'))->display(function () {
@@ -68,6 +82,14 @@ class ShopOrderController extends AdminController
         $grid->column('created_at', __('创建时间'));
         $grid->column('updated_at', __('更新时间'));
 //        $grid->column('deleted_at', __('Deleted at'));
+        $grid->actions(function ($actions) {
+
+            // 去掉删除
+            $actions->disableDelete();
+
+            // 去掉查看
+            $actions->disableView();
+        });
 
         return $grid;
     }
@@ -84,7 +106,7 @@ class ShopOrderController extends AdminController
 
         $show->field('id', __('Id'));
         $show->field('user_id', __('User id'));
-        $show->field('order_sn', __('订单编号'));
+        $show->field('order_n', __('订单编号'));
         $show->field('user_coupon_id', __('User coupon id'));
         $show->field('num', __('商品总数'));
 //        $show->field('unit_price', __('Unit price'));
@@ -115,9 +137,9 @@ class ShopOrderController extends AdminController
 
         $form->column(1/2, function ($form) {
 
-            $form->text('order_sn', __('订单编号'))->readonly();
+            $form->text('order_n', __('订单编号'))->readonly();
             $form->select('user_id', __('用户昵称'))->options(User::all()->pluck("nickname",'id'))->readonly();
-            $form->display('user_coupon_id', __('User coupon id'))->with(function ($user_coupon_id){
+            $form->display('user_coupon_id', __('优惠券'))->with(function ($user_coupon_id){
 
                 if ($user_coupon_id == 0){
 
@@ -142,30 +164,34 @@ class ShopOrderController extends AdminController
             $form->decimal('total_price', __('总价'))->default(0.00)->readonly();
             $form->decimal('discount_price', __('折扣金额'))->default(0.00)->readonly();
             $form->decimal('real_price', __('实际支付'))->default(0.00)->readonly();
-            $form->display('status', __('订单状态'))->with(function ($val){
+            $form->display('status', __('订单状态'))->with(function ($status){
 
-                $status = "";
-
-
-                switch ($val){
-                    case 0:
-                        $status = "待付款";
-                        break;
-                    case 1:
-                        $status = "订单取消";
-                        break;
-                    case 2:
-                        $status = "已付款待发货";
-                        break;
-                    case 3:
-                        $status = "已发货待收货";
-                        break;
-                    case 4:
-                        $status = "已收货完成";
-                        break;
+                $order_refund = ShopOrderRefund::find($this->refund_id);
+                if ($order_refund && $order_refund->status != ShopOrderRefund::CANCEL_REFUND && $order_refund->status != ShopOrderRefund::FAILD_REFUND){
+                    switch ($order_refund->status){
+                        case 0:
+                            return '<span class="label-info" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;发起退款';
+                        case 2:
+                            return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;退款中';
+                        case 3:
+                            return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;完成退款';
+                    }
                 }
 
-                return $status;
+                switch ($status){
+                    case 0:
+                        return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;待付款';
+                    case 1:
+                        return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;订单取消';
+                    case 2:
+                        return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已付款待发货';
+                    case 3:
+                        return '<span class="label-primary" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已发货待收货';
+                    case 4:
+                        return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已完成';
+                    default:
+                        return '<span class="label-danger" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;未知';
+                }
 
 
             });

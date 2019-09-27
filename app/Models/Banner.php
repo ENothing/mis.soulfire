@@ -8,4 +8,11 @@ class Banner extends AppModel
 {
     //
     protected $table = "banners";
+
+    public function banner_cate()
+    {
+        return $this->belongsTo(BannerCate::class,"cate_id","id");
+
+    }
+
 }

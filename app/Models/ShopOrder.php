@@ -18,14 +18,19 @@ class ShopOrder extends AppModel
 
     protected $table = "shop_orders";
 
+    public function shop_order_goods()
+    {
 
+        return $this->hasMany(ShopOrderGoods::class,"order_id","id");
+
+
+    }
 
 
     public function shop_order_goods_with_goods()
     {
 
-        return $this->hasMany(ShopOrderGoods::class,"order_id","id")->with(['shop_goods','shop_goods_spu']);
-
+        return $this->shop_order_goods()->with(['shop_goods','shop_goods_spu']);
 
     }
 
@@ -39,6 +44,18 @@ class ShopOrder extends AppModel
             'id',
             'goods_id'
         );
+
+    }
+
+
+    public function shop_order_refund()
+    {
+        return $this->hasOne(ShopOrderRefund::class,"id","refund_id");
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class,"user_id","id");
 
     }
 

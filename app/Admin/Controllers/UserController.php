@@ -27,7 +27,22 @@ class UserController extends AdminController
     {
         $grid = new Grid(new User);
         $grid->disableCreateButton();
+        $grid->disableRowSelector();
 //        $grid->column('id', __('Id'));
+
+        $grid->filter(function($filter){
+            $filter->expand();
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+
+            // 在这里添加字段过滤器
+            $filter->like('nickname', '昵称');
+            $filter->equal('openid', 'Openid');
+            $filter->equal('mobile', '手机号');
+            $filter->between('created_at', __('创建时间'))->datetime();
+        });
+
+
         $grid->column('nickname', __('昵称'));
         $grid->column('openid', __('Openid'));
         $grid->column('level',__('等级'))->display(function () {
@@ -40,6 +55,14 @@ class UserController extends AdminController
         $grid->column('head_url','头像')->image('',95,95);
         $grid->column('mobile', __('手机号'));
         $grid->column('email', __('邮箱'));
+        $states = [
+            'on'  => ['value' => 1, 'text' => '是', 'color' => 'success'],
+            'off' => ['value' => 0, 'text' => '否', 'color' => 'info'],
+        ];
+        $grid->column('is_ban', __('是否禁用'))->switch($states)->filter([
+            0 => '否',
+            1 => '是',
+        ]);;
         $grid->column('created_at', __('创建时间'));
         $grid->column('updated_at', __('更新时间'));
 //        $grid->column('deleted_at', __('Deleted at'));
@@ -47,6 +70,7 @@ class UserController extends AdminController
 
             // 去掉删除
             $actions->disableDelete();
+            $actions->disableView();
 
         });
         return $grid;
@@ -88,10 +112,61 @@ class UserController extends AdminController
 //        $form->text('openid', __('Openid'));
         $form->text('nickname', __('昵称'))->readonly();
 //        $form->text('head_url', __('头像'))->readonly();
-        $form->image('head_url','头像');
-        $form->mobile('mobile', __('手机号'));
-        $form->email('email', __('邮箱'));
+        $form->image('head_url','头像')->readonly();
+        $form->mobile('mobile', __('手机号'))->readonly();
+        $form->email('email', __('邮箱'))->readonly();
+        $form->display("user_id",__('等级'))->with(function (){
 
+
+            $level = UserLevel::with("level")->where('user_id',$this->id)->first();
+
+            return $level->level->name;
+
+
+        });
+        $form->display("parent_id",__('邀请人'))->with(function ($parent_id){
+
+
+            if ($parent_id == 0){
+
+                return "暂无";
+
+            }
+
+
+            return User::find($parent_id)->nickname;
+
+
+        });
+        $form->text('invitation_code', __('邀请码'))->readonly();
+        $states = [
+            'on'  => ['value' => 1, 'text' => '是', 'color' => 'success'],
+            'off' => ['value' => 0, 'text' => '否', 'color' => 'info'],
+        ];
+
+        $form->switch('is_ban', __('是否禁用'))->states($states);
+        $form->tools(function (Form\Tools $tools) {
+            // 去掉`删除`按钮
+            $tools->disableDelete();
+            // 去掉`查看`按钮
+            $tools->disableView();
+
+        });
+        $form->footer(function ($footer) {
+
+            // 去掉`重置`按钮
+            $footer->disableReset();
+
+            // 去掉`查看`checkbox
+            $footer->disableViewCheck();
+
+            // 去掉`继续编辑`checkbox
+            $footer->disableEditingCheck();
+
+            // 去掉`继续创建`checkbox
+            $footer->disableCreatingCheck();
+
+        });
         return $form;
     }
 }
