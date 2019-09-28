@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Models\Activity;
 use App\Models\ActivityOrder;
+use App\Models\ActivityOrderRefund;
 use App\Models\User;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -28,6 +29,20 @@ class ActivityOrderController extends AdminController
     {
         $grid = new Grid(new ActivityOrder);
         $grid->disableRowSelector();
+        $grid->filter(function($filter){
+
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+            $filter->expand();
+
+            // 在这里添加字段过滤器
+            $filter->like('user.nickname', '用户昵称');
+            $filter->like('activity.title', '活动标题');
+            $filter->equal('order_n', '订单编号');
+            $filter->like('name', '姓名');
+            $filter->equal('mobile', '手机号');
+            $filter->between('created_at', __('创建时间'))->datetime();
+        });
 //        $grid->column('id', __('Id'));
         $grid->user()->nickname(__('用户昵称'));
         $grid->activity()->title(__('活动标题'));
@@ -42,26 +57,41 @@ class ActivityOrderController extends AdminController
         $grid->column('total_price', __('总价'));
         $grid->column('discount_price', __('折扣金额'));
         $grid->column('real_price', __('实际支付'));
-        $grid->column('status', __('订单状态'))->using([
-            0 => '待付款',
-            1 => '已付款',
-            2 => '已完成',
-            3 => '已取消',
-            4 => '发起退款',
-            5 => '退款完成',
-            6 => '退款失败',
-        ], '订单状态不存在')->dot([
-            0 => 'warning',
-            1 => 'primary',
-            2 => 'success',
-            3 => 'default',
-            4 => 'danger',
-            5 => 'default',
-            6 => 'warning',
-        ], 'danger');
 
 
-        $grid->column('created_at', __('创建时间'));
+        $grid->column("status", __('订单状态'))->display(function ($status) {
+
+
+            $activity_order_refund = ActivityOrderRefund::find($this->refund_id);
+            if ($activity_order_refund && $activity_order_refund->status != ActivityOrderRefund::CANCEL_REFUND && $activity_order_refund->status != ActivityOrderRefund::FAILD_REFUND){
+                switch ($activity_order_refund->status){
+                    case 0:
+                        return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;发起退款';
+                    case 2:
+                        return '<span class="label-info" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;退款中';
+                    case 3:
+                        return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;完成退款';
+                }
+            }
+
+            switch ($status){
+                case 0:
+                    return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;待付款';
+                case 1:
+                    return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;订单取消';
+                case 2:
+                    return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已付款待发货';
+                case 3:
+                    return '<span class="label-primary" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已发货待收货';
+                case 4:
+                    return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已完成';
+                default:
+                    return '<span class="label-danger" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;未知';
+            }
+        });
+
+
+        $grid->column('created_at', __('创建时间'))->sortable();
         $grid->column('updated_at', __('更新时间'));
         $grid->disableCreateButton();
         $grid->actions(function ($actions) {
@@ -186,35 +216,34 @@ class ActivityOrderController extends AdminController
         $form->decimal('total_price', __('总价'))->default(0.00)->readonly();
         $form->decimal('discount_price', __('折扣金额'))->default(0.00)->readonly();
         $form->decimal('real_price', __('实际支付'))->default(0.00)->readonly();
-        $form->display('status', __('订单状态'))->with(function ($val) {
+        $form->display('status', __('订单状态'))->with(function ($status){
 
-            switch ($val) {
-                case 0:
-                    $status = "待付款";
-                    break;
-                case 1:
-                    $status = "已付款";
-                    break;
-                case 2:
-                    $status = "已完成";
-                    break;
-                case 3:
-                    $status = "已取消";
-                    break;
-                case 4:
-                    $status = "发起退款";
-                    break;
-                case 5:
-                    $status = "退款完成";
-                    break;
-                case 6:
-                    $status = "退款失败";
-                    break;
-                default:
-                    $status = "订单状态不存在";
+            $activity_order_refund = ActivityOrderRefund::find($this->refund_id);
+            if ($activity_order_refund && $activity_order_refund->status != ActivityOrderRefund::CANCEL_REFUND && $activity_order_refund->status != ActivityOrderRefund::FAILD_REFUND){
+                switch ($activity_order_refund->status){
+                    case 0:
+                        return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;发起退款';
+                    case 2:
+                        return '<span class="label-info" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;退款中';
+                    case 3:
+                        return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;完成退款';
+                }
             }
 
-            return $status;
+            switch ($status){
+                case 0:
+                    return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;待付款';
+                case 1:
+                    return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;订单取消';
+                case 2:
+                    return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已付款待发货';
+                case 3:
+                    return '<span class="label-primary" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已发货待收货';
+                case 4:
+                    return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已完成';
+                default:
+                    return '<span class="label-danger" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;未知';
+            }
 
 
         });
@@ -222,6 +251,15 @@ class ActivityOrderController extends AdminController
 
             // 去掉`重置`按钮
             $footer->disableReset();
+
+            // 去掉`提交`按钮
+            $footer->disableSubmit();
+
+            // 去掉`查看`checkbox
+            $footer->disableViewCheck();
+
+            // 去掉`继续编辑`checkbox
+            $footer->disableEditingCheck();
 
             // 去掉`继续创建`checkbox
             $footer->disableCreatingCheck();

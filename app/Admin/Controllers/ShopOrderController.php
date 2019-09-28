@@ -46,9 +46,9 @@ class ShopOrderController extends AdminController
            if ($order_refund && $order_refund->status != ShopOrderRefund::CANCEL_REFUND && $order_refund->status != ShopOrderRefund::FAILD_REFUND){
                switch ($order_refund->status){
                    case 0:
-                       return '<span class="label-info" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;发起退款';
+                       return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;发起退款';
                    case 2:
-                       return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;退款中';
+                       return '<span class="label-info" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;退款中';
                    case 3:
                        return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;完成退款';
                }
@@ -170,9 +170,9 @@ class ShopOrderController extends AdminController
                 if ($order_refund && $order_refund->status != ShopOrderRefund::CANCEL_REFUND && $order_refund->status != ShopOrderRefund::FAILD_REFUND){
                     switch ($order_refund->status){
                         case 0:
-                            return '<span class="label-info" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;发起退款';
+                            return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;发起退款';
                         case 2:
-                            return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;退款中';
+                            return '<span class="label-info" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;退款中';
                         case 3:
                             return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;完成退款';
                     }

@@ -25,7 +25,7 @@ class ActivityCateController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new ActivityCate);
-
+        $grid->disableFilter();
         $grid->column('id', __('Id'));
         $grid->column('name', __('类名'));
 
