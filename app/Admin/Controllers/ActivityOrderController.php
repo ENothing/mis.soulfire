@@ -27,7 +27,7 @@ class ActivityOrderController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new ActivityOrder);
-
+        $grid->disableRowSelector();
 //        $grid->column('id', __('Id'));
         $grid->user()->nickname(__('用户昵称'));
         $grid->activity()->title(__('活动标题'));
@@ -64,6 +64,15 @@ class ActivityOrderController extends AdminController
         $grid->column('created_at', __('创建时间'));
         $grid->column('updated_at', __('更新时间'));
         $grid->disableCreateButton();
+        $grid->actions(function ($actions) {
+
+            // 去掉删除
+            $actions->disableDelete();
+
+            // 去掉查看
+            $actions->disableView();
+        });
+
         return $grid;
     }
 

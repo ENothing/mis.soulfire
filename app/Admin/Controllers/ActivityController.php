@@ -27,6 +27,8 @@ class ActivityController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Activity);
+        $grid->disableRowSelector();
+
         $grid->filter(function($filter){
 
             // 去掉默认的id过滤器
@@ -52,10 +54,22 @@ class ActivityController extends AdminController
         $grid->column('end_at', __('结束时间'));
         $grid->column('start_enter_at', __('开始报名时间'));
         $grid->column('end_enter_at', __('结束报名时间'));
-
+        $states = [
+            'on'  => ['value' => 1, 'text' => '是', 'color' => 'success'],
+            'off' => ['value' => 0, 'text' => '否', 'color' => 'default'],
+        ];
+        $grid->column('is_publish',__('是否发布'))->switch($states);
         $grid->column('created_at', __('创建时间'))->sortable();
         $grid->column('updated_at', __('更新时间'));
+        $grid->actions(function ($actions) {
 
+            // 去掉删除
+            $actions->disableDelete();
+
+
+            // 去掉查看
+            $actions->disableView();
+        });
         return $grid;
     }
 
@@ -109,7 +123,20 @@ class ActivityController extends AdminController
         $form->number('person_limit', __('人数限制'))->default(0)->min(0);
         $form->number('view', __('浏览数'))->default(0)->min(0);
         $form->number('like', __('点赞数'))->default(0)->min(0);
+        $states = [
+            'on'  => ['value' => 1, 'text' => '是', 'color' => 'success'],
+            'off' => ['value' => 0, 'text' => '否', 'color' => 'default'],
+        ];
+        $form->switch('is_publish',__('是否发布'))->states($states);
+        $form->tools(function (Form\Tools $tools) {
 
+            // 去掉`删除`按钮
+            $tools->disableDelete();
+
+            // 去掉`查看`按钮
+            $tools->disableView();
+
+        });
         return $form;
     }
 }

@@ -33,6 +33,7 @@ Route::group([
     $router->resource('shop_order_pay_logs', 'ShopOrderPayLogController');
     $router->resource('shop_order_refunds', 'ShopOrderRefundController');
     $router->resource('user_invite_logs', 'UserInviteLogController');
+    $router->resource('activity_order_refunds', 'ActivityOrderRefundController');
 });
 
 Route::group([

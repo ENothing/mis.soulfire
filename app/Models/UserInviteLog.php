@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class UserInviteLog extends Model
+class UserInviteLog extends AppModel
 {
     //
     protected $table = "user_invite_logs";
