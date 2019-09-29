@@ -2,6 +2,8 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\Actions\ShopGoodsCate\BatchLogicDelete;
+use App\Admin\Extensions\Actions\ShopGoodsCate\LogicDelete;
 use App\Models\ShopGoodsCate;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -25,10 +27,19 @@ class ShopGoodsCateController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new ShopGoodsCate);
-
+        $grid->disableFilter();
         $grid->column('id', __('Id'));
         $grid->column('name', __('类名'));
-
+        $grid->actions(function ($actions) {
+            $actions->disableDelete();
+            // 去掉查看
+            $actions->disableView();
+            $actions->add(new LogicDelete());
+        });
+        $grid->batchActions(function ($batch) {
+            $batch->disableDelete();
+            $batch->add(new BatchLogicDelete());
+        });
         return $grid;
     }
 

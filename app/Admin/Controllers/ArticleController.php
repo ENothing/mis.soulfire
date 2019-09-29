@@ -27,16 +27,28 @@ class ArticleController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Article);
+        $grid->filter(function($filter){
 
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+            $filter->expand();
+            // 在这里添加字段过滤器
+            $filter->like('title',__('标题'));
+            $filter->like('user.nickname',__('作者'));
+            $filter->equal('cate_id',__('文章类型'))->select(ArticleCate::all()->pluck("name","id"));
+            $filter->between('start_at',  __('开始时间'))->datetime();
+            $filter->between('start_enter_at', __('开始报名时间'))->datetime();
+        });
         $grid->column('id', __('Id'));
         $grid->column('title', __('标题'));
         $grid->user()->nickname(__('作者'));
         $grid->article_cate()->name(__('文章类型'));
         $grid->column('thumb', __('封面'))->image('',150,150);
 //        $grid->column('content', __('内容'));
-        $grid->column('like', __('点赞数'));
-        $grid->column('view', __('浏览量'));
-
+        $grid->column('like', __('点赞数'))->sortable();
+        $grid->column('view', __('浏览量'))->sortable();
+        $grid->column('created_at', __('创建时间'))->sortable();
+        $grid->column('updated_at', __('更新时间'));
         return $grid;
     }
 

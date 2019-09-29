@@ -25,7 +25,7 @@ class ArticleCateController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new ArticleCate);
-
+        $grid->disableFilter();
         $grid->column('id', __('Id'));
         $grid->column('name', __('类名'));
 

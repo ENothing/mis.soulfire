@@ -27,6 +27,16 @@ class ArticleCommentController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new ArticleComment);
+        $grid->filter(function($filter){
+
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+            $filter->expand();
+            // 在这里添加字段过滤器
+            $filter->like('user.nickname',__('昵称'));
+            $filter->like('article.title',__('文章标题'));
+            $filter->between('created_at',  __('开始时间'))->datetime();
+        });
         $grid->column('id', __('Id'));
         $grid->user()->nickname(__('昵称'));
         $grid->article()->title(__('文章标题'));

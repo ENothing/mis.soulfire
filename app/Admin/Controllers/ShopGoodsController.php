@@ -28,23 +28,40 @@ class ShopGoodsController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new ShopGoods);
+        $grid->filter(function($filter){
 
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+            $filter->expand();
+            // 在这里添加字段过滤器
+            $filter->like('name',__('商品名称'));
+            $filter->like('article.title',__('文章标题'));
+            $filter->equal('cate_id',__('商品分类'))->select(ShopGoodsCate::all()->pluck("name","id"));
+            $filter->equal('brand_id',__('品牌分类'))->select(ShopGoodsBrand::all()->pluck("name","id"));
+            $filter->between('created_at',  __('开始时间'))->datetime();
+        });
         $grid->column('id', __('Id'));
         $grid->column('name', __('商品名称'));
         $grid->shop_goods_cate('cate_id')->name(__('商品分类'));
         $grid->shop_goods_brand('brand_id')->name(__('品牌分类'));
         $grid->column('thumb', __('封面'))->image('', 150, 150);
-        $grid->column('cur_price', __('现价'));
-        $grid->column('ori_price', __('原价'));
-        $grid->column('stock', __('库存'));
-        $grid->column('sold', __('已售'));
+        $grid->column('cur_price', __('现价'))->sortable();
+        $grid->column('ori_price', __('原价'))->sortable();
+        $grid->column('stock', __('库存'))->sortable();
+        $grid->column('sold', __('已售'))->sortable();
         $grid->column('is_level', __('是否参与等级'))->display(function ($is_level) {
 
             return $is_level == 0 ? "否" : "是";
 
-        });
+        })->filter([1=>"是",0=>"否"]);
         $grid->level('level_id')->name(__('等级名称'));
-        $grid->column('created_at', __('创建时间'));
+
+        $states = [
+            'on'  => ['value' => 1, 'text' => '是', 'color' => 'success'],
+            'off' => ['value' => 0, 'text' => '否', 'color' => 'danger'],
+        ];
+        $grid->column('is_shelf', __('是否上架'))->switch($states);
+        $grid->column('created_at', __('创建时间'))->sortable();
         $grid->column('updated_at', __('更新时间'));
 
         return $grid;
@@ -108,6 +125,11 @@ class ShopGoodsController extends AdminController
             $form->decimal('price', __('价格'));
             $form->number('stock', __('库存'))->min(0);
         });
+        $states = [
+            'on'  => ['value' => 1, 'text' => '是', 'color' => 'success'],
+            'off' => ['value' => 0, 'text' => '否', 'color' => 'danger'],
+        ];
+        $form->switch('is_shelf', __('是否上架'))->states($states);
 
         $form->editor('goods_content', __('商品内容'));
 

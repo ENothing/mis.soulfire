@@ -2,6 +2,9 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\Actions\ShopGoodsBrand\BatchLogicDelete;
+use App\Admin\Extensions\Actions\ShopGoodsBrand\LogicDelete;
+use App\Models\ShopGoods;
 use App\Models\ShopGoodsBrand;
 use App\Models\ShopGoodsCate;
 use Encore\Admin\Controllers\AdminController;
@@ -26,7 +29,15 @@ class ShopGoodsBrandController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new ShopGoodsBrand);
+        $grid->filter(function($filter){
 
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+            $filter->expand();
+            // 在这里添加字段过滤器
+            $filter->like('name',__('品牌名称'));
+            $filter->equal('cate_id',__('所属商品分类'))->select(ShopGoodsCate::all()->pluck("name","id"));
+        });
         $grid->column('id', __('Id'));
         $grid->column('name', __('品牌名称'));
         $grid->column('cate_id', __('所属商品分类'))->display(function ($cate_id){
@@ -34,7 +45,16 @@ class ShopGoodsBrandController extends AdminController
 
         });
         $grid->column('logo', __('Logo'))->image('',100,100);
-
+        $grid->actions(function ($actions) {
+            $actions->disableDelete();
+            // 去掉查看
+            $actions->disableView();
+            $actions->add(new LogicDelete);
+        });
+        $grid->batchActions(function ($batch) {
+            $batch->disableDelete();
+            $batch->add(new BatchLogicDelete);
+        });
         return $grid;
     }
 
@@ -68,6 +88,19 @@ class ShopGoodsBrandController extends AdminController
         $form->image('logo', __('Logo'));
         $form->select('cate_id', __('所属商品分类'))->options(ShopGoodsCate::all()->pluck("name","id"));
         $form->text('name', __('品牌名称'));
+        $form->deleting(function ($form) {
+
+//            if (ShopGoods::where('brand_id',$form->model()->id)->first()){
+//
+//
+//
+//            }
+            dd($form->model()->id);
+            return response()->json([
+                'status'  => false,
+                'message' => '123'.$form->id,
+            ]);
+        });
 
         return $form;
     }
