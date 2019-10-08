@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 use App\Admin\Extensions\Actions\Level\BatchLogicDelete;
 use App\Admin\Extensions\Actions\Level\LogicDelete;
 use App\Models\Level;
+use App\Models\UserLevel;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -73,6 +74,20 @@ class LevelController extends AdminController
         $form->text('name', __('等级名'));
         $form->decimal('experience', __('经验值'));
 
+        $form->deleting(function () {
+
+            $id = request()->route()->parameters()['level'];
+
+            if (UserLevel::where('level_id',$id)->first()){
+
+                return response()->json([
+                    'status'  => false,
+                    'message' => '等级已被使用',
+                ]);
+
+            }
+
+        });
         return $form;
     }
 }
