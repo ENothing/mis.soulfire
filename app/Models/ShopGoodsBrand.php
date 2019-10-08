@@ -8,5 +8,6 @@ class ShopGoodsBrand extends AppModel
     //
     protected $table = "shop_goods_brands";
     public $timestamps = false;
+    protected $guarded = [];
 
 }

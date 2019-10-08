@@ -140,6 +140,7 @@ class ActivityOrderRefundController extends AdminController
             $tools->disableView();
 
         });
+        $form->activity_order_agree_refund();
         $form->footer(function ($footer) {
 
             // 去掉`重置`按钮

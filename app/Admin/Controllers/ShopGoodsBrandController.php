@@ -85,21 +85,34 @@ class ShopGoodsBrandController extends AdminController
     {
         $form = new Form(new ShopGoodsBrand);
 
+        $form->hidden('id');
         $form->image('logo', __('Logo'));
         $form->select('cate_id', __('所属商品分类'))->options(ShopGoodsCate::all()->pluck("name","id"));
         $form->text('name', __('品牌名称'));
-        $form->deleting(function ($form) {
+        $form->footer(function ($footer) {
 
-//            if (ShopGoods::where('brand_id',$form->model()->id)->first()){
-//
-//
-//
-//            }
-            dd($form->model()->id);
-            return response()->json([
-                'status'  => false,
-                'message' => '123'.$form->id,
-            ]);
+            // 去掉`重置`按钮
+            $footer->disableReset();
+
+            // 去掉`查看`checkbox
+            $footer->disableViewCheck();
+
+
+        });
+
+        $form->deleting(function (Form $form) {
+
+            $id = request()->route()->parameters()['shop_goods_brand'];
+
+            if (ShopGoods::where('brand_id',$id)->first()){
+
+                return response()->json([
+                    'status'  => false,
+                    'message' => '品牌已被使用',
+                ]);
+
+            }
+
         });
 
         return $form;

@@ -27,6 +27,24 @@ class ShopOrderPayLogController extends AdminController
         $grid = new Grid(new ShopOrderPayLog);
         $grid->disableCreateButton();
         $grid->disableRowSelector();
+        $grid->filter(function ($filter) {
+
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+            $filter->expand();
+
+            $filter->equal('shop_order.order_n', __('订单编号'));
+            $filter->equal('pay_n', __('支付单号'));
+            $filter->between('created_at', __('创建时间'))->datetime();
+            $filter->in('status', __('	支付状态'))->checkbox([
+                0 => '待支付',
+                1 => '支付成功',
+                2 => '支付失败',
+            ]);
+
+
+        });
+
         $grid->column('id', __('Id'));
         $grid->shop_order('order_id', __('Order id'))->order_n(__('订单编号'));
         $grid->column('pay_n', __('支付单号'));

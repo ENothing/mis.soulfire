@@ -27,6 +27,30 @@ class ShopOrderRefundController extends AdminController
         $grid = new Grid(new ShopOrderRefund);
         $grid->disableCreateButton();
         $grid->disableRowSelector();
+        $grid->filter(function ($filter) {
+
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+            $filter->expand();
+
+            $filter->equal('shop_order.order_n', __('订单编号'));
+            $filter->equal('refund_n', __('退款单号'));
+            $filter->between('created_at', __('创建时间'))->datetime();
+            $filter->equal('type', __('退款类型'))->radio([
+                ''   => '全部',
+                1    => '仅退款',
+                2    => '退货退款',
+            ]);
+            $filter->in('status', __('	退款状态'))->checkbox([
+                0 => '发起退款',
+                1 => '取消退款',
+                2 => '退款中',
+                3 => '已退款',
+                4 => '驳回退款',
+            ]);
+
+
+        });
         $grid->column('id', __('Id'));
         $grid->column('refund_n', __('退款单号'));
         $grid->shop_order('order_id', __('order_id'))->order_n(__('订单编号'));
@@ -53,12 +77,12 @@ class ShopOrderRefundController extends AdminController
             4 => 'danger',
         ], 'danger');
 
-        $grid->column('price', __('金额'));
+        $grid->column('price', __('金额'))->sortable();
 
 //        $grid->column('reason_pics', __('Reason pics'));
 //        $grid->column('reason', __('Reason'));
 //        $grid->column('reply_reason', __('Reply reason'));
-        $grid->column('created_at', __('创建时间'));
+        $grid->column('created_at', __('创建时间'))->sortable();
         $grid->column('updated_at', __('更新时间'));
         $grid->actions(function ($actions) {
 

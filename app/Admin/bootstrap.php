@@ -19,8 +19,12 @@
  */
 use Encore\Admin\Grid;
 use Encore\Admin\Form;
+use App\Admin\Extensions\Forms\ActivityOrderAgreeRefund;
 
 Form::forget(['map']);
+
+Form::extend('activity_order_agree_refund', ActivityOrderAgreeRefund::class);
+
 
 Grid::init(function (Grid $grid) {
 

@@ -2,6 +2,8 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\Actions\Level\BatchLogicDelete;
+use App\Admin\Extensions\Actions\Level\LogicDelete;
 use App\Models\Level;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -25,11 +27,20 @@ class LevelController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Level);
-
+        $grid->disableFilter();
         $grid->column('id', __('Id'));
         $grid->column('name', __('等级名'));
         $grid->column('experience', __('经验值'));
-
+        $grid->actions(function ($actions) {
+            $actions->disableDelete();
+            // 去掉查看
+            $actions->disableView();
+            $actions->add(new LogicDelete);
+        });
+        $grid->batchActions(function ($batch) {
+            $batch->disableDelete();
+            $batch->add(new BatchLogicDelete);
+        });
         return $grid;
     }
 

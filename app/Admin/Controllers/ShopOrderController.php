@@ -30,7 +30,42 @@ class ShopOrderController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new ShopOrder);
+        $grid->filter(function($filter){
 
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+            $filter->expand();
+            // 在这里添加字段过滤器
+
+
+            $filter->column(1/2, function ($filter) {
+                $filter->like('user.nickname',__('用户昵称'));
+                $filter->like('name',__('姓名'));
+                $filter->equal('mobile',__('手机号'));
+            });
+
+            $filter->column(1/2, function ($filter) {
+                $filter->equal('order_n',__('订单编号'));
+                $filter->between('created_at',  __('创建时间'))->datetime();
+
+
+                $filter->in('status', __('订单状态'))->checkbox([
+                    0    => '待付款',
+                    1    => '订单取消',
+                    2    => '已付款待发货',
+                    3   => '已发货待收货',
+                    4    => '已完成',
+                ]);
+
+
+
+            });
+
+
+        });
+
+        $grid->disableRowSelector();
+        $grid->disableCreateButton();
         $grid->column('id', __('Id'));
         $grid->user('user_id', __('User id'))->nickname( __('用户昵称'));
         $grid->column('order_n', __('订单编号'));
@@ -79,7 +114,7 @@ class ShopOrderController extends AdminController
 //        $grid->column('city', __('市'));
 //        $grid->column('district', __('区'));
 //        $grid->column('detail_address', __('详细地址'));
-        $grid->column('created_at', __('创建时间'));
+        $grid->column('created_at', __('创建时间'))->sortable();
         $grid->column('updated_at', __('更新时间'));
 //        $grid->column('deleted_at', __('Deleted at'));
         $grid->actions(function ($actions) {

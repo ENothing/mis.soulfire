@@ -25,7 +25,26 @@ class CouponController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Coupon);
+        $grid->filter(function ($filter) {
 
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+            $filter->expand();
+
+            $filter->like('name', __('优惠券名'));
+            $filter->in('type', __('	所属模块'))->checkbox([
+                1 => '活动',
+                2 => '商城',
+            ]);
+            $filter->in('coupon_type', __('	优惠方式'))->checkbox([
+                1 => '满减',
+                2 => '立减',
+                3 => '打折',
+            ]);
+            $filter->between('created_at', __('创建时间'))->datetime();
+            $filter->between('start_receive_time', __('领取开始时间'))->datetime();
+
+        });
         $grid->column('id', __('Id'));
         $grid->column('name', __('优惠券名'));
         $grid->column('type', __('所属模块'))->using([1=>"活动",2=>"商城"])->label([
@@ -46,7 +65,7 @@ class CouponController extends AdminController
 //        $grid->column('reduction_price', __('减'));
 //        $grid->column('immediately_price', __('立减金额'));
 //        $grid->column('discount', __('打折'));
-        $grid->column('start_receive_time', __('领取开始时间'));
+        $grid->column('start_receive_time', __('领取开始时间'))->sortable();
         $grid->column('end_receive_time', __('领取结束时间'));
 
         $grid->column('is_timeing', __('使用时间限制'))->display(function ($is_timeing) {
@@ -61,7 +80,7 @@ class CouponController extends AdminController
 //        $grid->column('start_use_time', __('开始使用时间'));
 //        $grid->column('end_use_time', __('结束使用时间'));
 //        $grid->column('day', __('领取后可使用天数'));
-        $grid->column('created_at', __('创建时间'));
+        $grid->column('created_at', __('创建时间'))->sortable();
         $grid->column('updated_at', __('更新时间'));
 
         return $grid;

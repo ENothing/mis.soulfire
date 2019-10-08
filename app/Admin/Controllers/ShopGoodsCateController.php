@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Extensions\Actions\ShopGoodsCate\BatchLogicDelete;
 use App\Admin\Extensions\Actions\ShopGoodsCate\LogicDelete;
+use App\Models\ShopGoods;
 use App\Models\ShopGoodsCate;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -69,7 +70,19 @@ class ShopGoodsCateController extends AdminController
         $form = new Form(new ShopGoodsCate);
 
         $form->text('name', __('类名'));
+        $form->deleting(function (Form $form) {
 
+            $id = request()->route()->parameters()['shop_goods_cate'];
+            if (ShopGoods::where('cate_id',$id)->first()){
+
+                return response()->json([
+                    'status'  => false,
+                    'message' => '分类已被使用',
+                ]);
+
+            }
+
+        });
         return $form;
     }
 }
