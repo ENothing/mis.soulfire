@@ -108,6 +108,7 @@ class ActivityOrderRefundController extends AdminController
     {
         $form = new Form(new ActivityOrderRefund);
 
+//        $form->display('id', __('Id'));
         $form->display('refund_n', __('退款单号'));
         $form->decimal('price', __('金额'))->default(0.00)->readonly();
         $form->display('order_id', __('订单编号'))->with(function ($order_id){
@@ -140,7 +141,17 @@ class ActivityOrderRefundController extends AdminController
             $tools->disableView();
 
         });
-        $form->activity_order_agree_refund();
+//        $id = request()->route()->parameters()['activity_order_refund'];
+
+//        $order_refund = ActivityOrderRefund::find($id);
+//
+//        if (!is_null($order_refund) && $order_refund->status == 0){
+
+            $form->activity_order_agree_refund();
+
+//        }
+
+
         $form->footer(function ($footer) {
 
             // 去掉`重置`按钮

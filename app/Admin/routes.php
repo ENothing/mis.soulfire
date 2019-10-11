@@ -37,11 +37,14 @@ Route::group([
 });
 
 Route::group([
-    'prefix'        => 'api',
+    'prefix'        => 'admin/api',
     'namespace'     => 'App\Admin\Api',
+    'middleware'    => config('admin.route.middleware'),
 ], function (Router $router) {
 
     $router->get('/brands', 'GoodsCateController@brand');
+    $router->post('/activity_order_agree_refund', 'ActivityOrderRefundController@agree_refund');
+    $router->post('/activity_order_reject_refund', 'ActivityOrderRefundController@reject_refund');
 
 });
 

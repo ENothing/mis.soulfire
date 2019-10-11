@@ -13,6 +13,7 @@ class ActivityOrderRefund extends AppModel
     const FAILD_REFUND = 4;//退款失败 驳回退款
 
     protected $table = "activity_order_refunds";
+    protected $guarded = [];
 
     public function activity_order()
     {
