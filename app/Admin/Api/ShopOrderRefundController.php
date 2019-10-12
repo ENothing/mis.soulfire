@@ -10,9 +10,10 @@ namespace App\Admin\Api;
 use App\Http\Controllers\Controller;
 use App\Helpers\ApiReturn;
 use App\Models\ActivityOrderRefund;
+use App\Models\ShopOrderRefund;
 use Illuminate\Http\Request;
 
-class ActivityOrderRefundController extends Controller
+class ShopOrderRefundController extends Controller
 {
     use ApiReturn;
 
@@ -21,7 +22,7 @@ class ActivityOrderRefundController extends Controller
 
         $id = $request->get('id');
 
-        $order_refund = ActivityOrderRefund::find($id);
+        $order_refund = ShopOrderRefund::find($id);
 
         if (is_null($order_refund)){
 
@@ -41,7 +42,7 @@ class ActivityOrderRefundController extends Controller
         $id = $request->get('id');
         $reply_reason = $request->get('reply_reason');
 
-        $order_refund = ActivityOrderRefund::find($id);
+        $order_refund = ShopOrderRefund::find($id);
 
         if (is_null($order_refund)){
 
@@ -62,7 +63,7 @@ class ActivityOrderRefundController extends Controller
     {
         $id = $request->get('id');
 
-        $order_refund = ActivityOrderRefund::find($id);
+        $order_refund = ShopOrderRefund::find($id);
 
         if (is_null($order_refund)){
 

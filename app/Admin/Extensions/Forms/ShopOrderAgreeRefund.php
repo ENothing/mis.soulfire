@@ -10,7 +10,7 @@ namespace App\Admin\Extensions\Forms;
 
 use Encore\Admin\Form\Field;
 
-class ActivityOrderAgreeRefund extends Field
+class ShopOrderAgreeRefund extends Field
 {
     protected $view = "admin.activity_order_agree_refund";
 
@@ -33,7 +33,7 @@ class ActivityOrderAgreeRefund extends Field
 
           $("#agree_refund").click(function () {
           
-                $.post('/admin/api/activity_order_agree_refund',{id:"{$id}",_token:"{$token}"},function(res){
+                $.post('/admin/api/shop_order_agree_refund',{id:"{$id}",_token:"{$token}"},function(res){
                     if(res.code == 200){
                         alert(res.msg);
                         window.location.reload();
@@ -47,7 +47,7 @@ class ActivityOrderAgreeRefund extends Field
           
                 var reply_reason = $("textarea[name='reply_reason']").val();
                 console.log(reply_reason)
-                $.post('/admin/api/activity_order_reject_refund',{id:"{$id}",reply_reason:reply_reason,_token:"{$token}"},function(res){
+                $.post('/admin/api/shop_order_reject_refund',{id:"{$id}",reply_reason:reply_reason,_token:"{$token}"},function(res){
                     if(res.code == 200){
                         alert(res.msg);
                         window.location.reload();
@@ -60,7 +60,7 @@ class ActivityOrderAgreeRefund extends Field
           
                 var reply_reason = $("textarea[name='reply_reason']").val();
                 console.log(reply_reason)
-                $.post('/admin/api/activity_order_finish_refund',{id:"{$id}",_token:"{$token}"},function(res){
+                $.post('/admin/api/shop_order_finish_refund',{id:"{$id}",_token:"{$token}"},function(res){
                     if(res.code == 200){
                         alert(res.msg);
                         window.location.reload();

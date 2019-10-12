@@ -59,4 +59,10 @@ class ShopOrder extends AppModel
 
     }
 
+
+    public function shop_order_delivery()
+    {
+        return $this->hasOne(ShopOrderDelivery::class,"order_id","id");
+    }
+
 }
