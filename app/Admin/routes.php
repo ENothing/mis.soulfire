@@ -50,6 +50,8 @@ Route::group([
     $router->post('/shop_order_agree_refund', 'ShopOrderRefundController@agree_refund');
     $router->post('/shop_order_reject_refund', 'ShopOrderRefundController@reject_refund');
     $router->post('/shop_order_finish_refund', 'ShopOrderRefundController@finish_refund');
+
+    $router->post('/shop_order_ship', 'ShopOrderController@order_ship');
 });
 
 

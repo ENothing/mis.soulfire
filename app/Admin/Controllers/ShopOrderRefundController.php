@@ -160,6 +160,12 @@ class ShopOrderRefundController extends AdminController
             $form->textarea('reason', __('原因'))->readonly();
             $form->divider();
             $form->textarea('reply_reason', __('驳回原因'));
+
+
+            $form->shop_order_agree_refund();
+
+
+
         });
 
 // 第二列占据右边1/2的页面宽度

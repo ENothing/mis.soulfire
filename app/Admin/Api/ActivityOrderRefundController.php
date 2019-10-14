@@ -19,7 +19,7 @@ class ActivityOrderRefundController extends Controller
     public function agree_refund(Request $request)
     {
 
-        $id = $request->get('id');
+        $id = $request->post('id');
 
         $order_refund = ActivityOrderRefund::find($id);
 
@@ -38,8 +38,8 @@ class ActivityOrderRefundController extends Controller
 
     public function reject_refund(Request $request)
     {
-        $id = $request->get('id');
-        $reply_reason = $request->get('reply_reason');
+        $id = $request->post('id');
+        $reply_reason = $request->post('reply_reason');
 
         $order_refund = ActivityOrderRefund::find($id);
 
@@ -60,7 +60,7 @@ class ActivityOrderRefundController extends Controller
 
     public function finish_refund(Request $request)
     {
-        $id = $request->get('id');
+        $id = $request->post('id');
 
         $order_refund = ActivityOrderRefund::find($id);
 

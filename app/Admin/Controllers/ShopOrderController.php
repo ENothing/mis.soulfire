@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Express;
 use App\Models\ShopOrder;
 use App\Models\ShopOrderRefund;
 use App\Models\User;
@@ -236,6 +237,14 @@ class ShopOrderController extends AdminController
             $form->text('city', __('市'));
             $form->text('district', __('区'));
             $form->text('detail_address', __('详细地址'));
+
+            $form->fieldset('快递', function (Form $form) {
+                $form->select('shop_order_delivery.express_id')->options(Express::all()->pluck("name","id"));
+                $form->text('shop_order_delivery.delivery_n',"快递单号");
+            });
+
+
+
         });
 
         $form->column(1/2, function ($form) {
@@ -250,7 +259,7 @@ class ShopOrderController extends AdminController
 
             })->disableDelete()->disableCreate();
         });
-
+        $form->shop_order_ship();
         $form->tools(function (Form\Tools $tools) {
             // 去掉`删除`按钮
             $tools->disableDelete();

@@ -31,45 +31,22 @@ class ShopOrderShip extends Field
 
         $this->script = <<<EOT
 
-          $("#agree_refund").click(function () {
+          $("#agree_ship").click(function () {
           
-                $.post('/admin/api/shop_order_agree_refund',{id:"{$id}",_token:"{$token}"},function(res){
-                    if(res.code == 200){
-                        alert(res.msg);
-                        window.location.reload();
-                    }
-                    alert(res.msg);
+                var express_id = $("select[name='express_id']").val();
+                var delivery_n = $("input[name='delivery_n']").val();
+          
+                $.post('/admin/api/shop_order_agree_refund',{id:"{$id}",express_id:express_id,,delivery_n:delivery_n,_token:"{$token}"},function(res){
+                        console.log(res)
+//                    if(res.code == 200){
+//                        alert(res.msg);
+////                        window.location.reload();
+//                    }
+//                    alert(res.msg);
                 })
 
           })
-
-          $("#reject_refund").click(function () {
           
-                var reply_reason = $("textarea[name='reply_reason']").val();
-                console.log(reply_reason)
-                $.post('/admin/api/shop_order_reject_refund',{id:"{$id}",reply_reason:reply_reason,_token:"{$token}"},function(res){
-                    if(res.code == 200){
-                        alert(res.msg);
-                        window.location.reload();
-                    }
-                    alert(res.msg);
-                })
-
-          })
-          $("#finish_refund").click(function () {
-          
-                var reply_reason = $("textarea[name='reply_reason']").val();
-                console.log(reply_reason)
-                $.post('/admin/api/shop_order_finish_refund',{id:"{$id}",_token:"{$token}"},function(res){
-                    if(res.code == 200){
-                        alert(res.msg);
-                        window.location.reload();
-                    }
-                    alert(res.msg);
-                })
-
-          })
-
 EOT;
 
         return parent::render();

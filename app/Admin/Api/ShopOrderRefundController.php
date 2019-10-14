@@ -20,7 +20,7 @@ class ShopOrderRefundController extends Controller
     public function agree_refund(Request $request)
     {
 
-        $id = $request->get('id');
+        $id = $request->post('id');
 
         $order_refund = ShopOrderRefund::find($id);
 
@@ -39,7 +39,7 @@ class ShopOrderRefundController extends Controller
 
     public function reject_refund(Request $request)
     {
-        $id = $request->get('id');
+        $id = $request->post('id');
         $reply_reason = $request->get('reply_reason');
 
         $order_refund = ShopOrderRefund::find($id);
@@ -61,7 +61,7 @@ class ShopOrderRefundController extends Controller
 
     public function finish_refund(Request $request)
     {
-        $id = $request->get('id');
+        $id = $request->post('id');
 
         $order_refund = ShopOrderRefund::find($id);
 

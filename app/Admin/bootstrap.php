@@ -20,10 +20,14 @@
 use Encore\Admin\Grid;
 use Encore\Admin\Form;
 use App\Admin\Extensions\Forms\ActivityOrderAgreeRefund;
+use App\Admin\Extensions\Forms\ShopOrderAgreeRefund;
+use App\Admin\Extensions\Forms\ShopOrderShip;
 
 Form::forget(['map']);
 
 Form::extend('activity_order_agree_refund', ActivityOrderAgreeRefund::class);
+Form::extend('shop_order_agree_refund', ShopOrderAgreeRefund::class);
+Form::extend('shop_order_ship', ShopOrderShip::class);
 
 
 Grid::init(function (Grid $grid) {
