@@ -1,8 +1,8 @@
-<canvas id="myChart" width="400" height="400"></canvas>
+<canvas id="member_num_chart" width="400" height="400"></canvas>
 <script>
 $(function () {
-    var ctx = document.getElementById("myChart").getContext('2d');
-    var myChart = new Chart(ctx, {
+    var ctx = document.getElementById("member_num_chart").getContext('2d');
+    var member_num_chart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
