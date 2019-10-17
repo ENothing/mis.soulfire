@@ -14,6 +14,7 @@ use Encore\Admin\Layout\Content;
 use Encore\Admin\Layout\Row;
 use Encore\Admin\Widgets\Box;
 use Encore\Admin\Widgets\InfoBox;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -49,25 +50,25 @@ class HomeController extends Controller
 //
                             $column->row(function (Row $row) {
 
+                                list($user_time,$user_count) = User::calc_user_in_30();
 
 
-
-                                $row->column(3, new Box('会员数量', view('admin.member_num_statistics')));
-
+                                $row->column(3, new Box('近30天会员数量', view('admin.member_num_statistics',['time'=>json_encode($user_time),'count'=>json_encode($user_count)])));
 
 
+                                list($ao_time,$ao_price) = ActivityPayLog::calc_consume_in_30();
 
-                                $row->column(3, new Box('活动订单消费趋势', view('admin.activity_order_statistics',['label'=>123])));
-
-
-
-
-                                $row->column(3, new Box('商品订单消费趋势', view('admin.shop_order_statistics')));
+                                $row->column(3, new Box('近30天活动订单消费趋势', view('admin.activity_order_statistics',['ao_time'=>json_encode($ao_time),'ao_price'=>json_encode($ao_price)])));
 
 
 
 
-                                $row->column(3, new Box('消费总额', view('admin.consume_statistics')));
+                                $row->column(3, new Box('近30天商品订单消费趋势', view('admin.shop_order_statistics')));
+
+
+
+
+                                $row->column(3, new Box('本年度每月消费总额', view('admin.consume_statistics')));
                             });
 
                         });

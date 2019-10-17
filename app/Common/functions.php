@@ -30,3 +30,23 @@ if (!function_exists('build_order_n')) {
         echo $str;
     }
 }
+
+/**
+ * 获取指定两个日期之间的所有日期
+ */
+if (!function_exists('between_dates')){
+    function between_dates($start,$end)
+    {
+        $data = [];
+        $start =  strtotime($start);
+        $end =  strtotime($end);
+        while ($start <= $end) {
+            $day = date('n-j', $start);
+            array_push($data,$day);
+            $start = strtotime('+1 day', $start);
+        };
+
+        return $data;
+    }
+}
+

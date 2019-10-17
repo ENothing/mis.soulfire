@@ -5,10 +5,10 @@
         var activity_order_chart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+                labels: JSON.parse('{!! $ao_time !!}'),
                 datasets: [{
-                    label: "{!! $label !!}",
-                    data: [12, 19, 3, 5, 2, 3],
+                    label: '消费金额',
+                    data: JSON.parse('{!! $ao_price !!}'),
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                     borderColor: 'rgba(54, 162, 235, 0.2)',
                     borderWidth: 1
