@@ -7,6 +7,7 @@ class ShopOrderDelivery extends AppModel
 {
     //
     protected $table = "shop_order_deliveries";
+    protected $guarded = [];
 
     public function shop_order()
     {

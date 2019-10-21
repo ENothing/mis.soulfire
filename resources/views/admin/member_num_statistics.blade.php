@@ -9,8 +9,8 @@ $(function () {
             datasets: [{
                 label: '用户数量',
                 data: JSON.parse('{!! $count !!}'),
-                backgroundColor: 'rgba(255,99,132,1)',
-                borderColor: 'rgba(54, 162, 235, 1)',
+                backgroundColor: 'rgba(156,133,255,100)',
+                borderColor: 'rgba(255, 255, 255, 1)',
                 borderWidth: 1
             }]
         },

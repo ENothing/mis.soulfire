@@ -239,8 +239,12 @@ class ShopOrderController extends AdminController
             $form->text('detail_address', __('详细地址'));
 
             $form->fieldset('快递', function (Form $form) {
-                $form->select('shop_order_delivery.express_id')->options(Express::all()->pluck("name","id"));
+                $form->select('shop_order_delivery.express_id','快递名称')->options(Express::all()->pluck("name","id"));
                 $form->text('shop_order_delivery.delivery_n',"快递单号");
+
+                $form->modefiy_delivery();
+                $form->shop_order_ship();
+
             });
 
 
@@ -259,7 +263,6 @@ class ShopOrderController extends AdminController
 
             })->disableDelete()->disableCreate();
         });
-        $form->shop_order_ship();
         $form->tools(function (Form\Tools $tools) {
             // 去掉`删除`按钮
             $tools->disableDelete();

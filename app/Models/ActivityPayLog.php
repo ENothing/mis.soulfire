@@ -25,10 +25,10 @@ class ActivityPayLog extends AppModel
 
 
         $user = self::where('status',1)->whereBetween("created_at",[$firstday,$lastday])
-            ->select([DB::raw('DATE_FORMAT(created_at,"%c-%e") as time'),DB::raw('SUM("price") as price')])
+            ->select([DB::raw('DATE_FORMAT(created_at,"%c-%e") as time'),DB::raw('SUM(price) as price')])
             ->groupBy(DB::raw('DATE_FORMAT(created_at,"%c-%e")'))->get()->toArray();
 
-        $arr = array_column($user,"count","time");
+        $arr = array_column($user,"price","time");
         $between_dates = array_fill_keys($between_dates, 0);
         $user = array_merge($between_dates,$arr);
 

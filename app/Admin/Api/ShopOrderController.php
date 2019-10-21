@@ -27,40 +27,88 @@ class ShopOrderController extends Controller
         $express_id = $request->post('express_id');
         $delivery_n = $request->post('delivery_n');
 
-        $order= ShopOrder::find($id);
+        $order = ShopOrder::find($id);
 
-        if (is_null($order)){
+        if (is_null($order)) {
 
             return $this->failed("数据不存在");
         }
 
 
-        if (!empty($express_id) && empty($delivery_n)){
+        if (!empty($express_id)) {
 
 
             $express = Express::find($express_id);
 
-            if (is_null($express)){
+            if (is_null($express)) {
 
                 return $this->failed("物流公司信息不存在");
 
             }
 
 
-             ShopOrderDelivery::create([
+            ShopOrderDelivery::create([
                 'order_id' => $id,
                 'name' => $express->name,
-                'abbreviation'=>$express->number,
-                'delivery_n'=>$delivery_n,
+                'abbreviation' => $express->number,
+                'delivery_n' => $delivery_n,
             ]);
 
         }
 
         $order->update([
-            'status'=>3
+            'status' => 3
         ]);
 
         return $this->success();
+    }
+
+
+    /**
+     * Created by Eric-Nothing.
+     * 更新快递单号
+     */
+    public function modify_delivery(Request $request)
+    {
+
+        $id = $request->post('id');
+        $express_id = $request->post('express_id');
+        $delivery_n = $request->post('delivery_n');
+
+        $express = Express::find($express_id);
+
+        if (is_null($express)) {
+
+            return $this->failed("物流公司信息不存在");
+
+        }
+
+        $order_delivery = ShopOrderDelivery::where('order_id',$id)->first();
+
+        if (is_null($order_delivery)) {
+
+            ShopOrderDelivery::create([
+                'order_id' => $id,
+                'name' => $express->name,
+                'abbreviation' => $express->number,
+                'delivery_n' => $delivery_n,
+                'express_id' => $express_id,
+            ]);
+
+            return $this->success("快递信息更新成功");
+
+        }
+
+        $order_delivery->update([
+            'name' => $express->name,
+            'abbreviation' => $express->number,
+            'delivery_n' => $delivery_n,
+            'express_id' => $express_id,
+        ]);
+
+        return $this->success("快递信息更新成功");
+
+
     }
 
 

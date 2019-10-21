@@ -9,8 +9,8 @@
                 datasets: [{
                     label: '消费金额',
                     data: JSON.parse('{!! $ao_price !!}'),
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 0.2)',
+                    backgroundColor: 'rgba(102, 164, 255,100)',
+                    borderColor: 'rgba(255, 255, 255, 1)',
                     borderWidth: 1
                 }]
             },

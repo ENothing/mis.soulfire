@@ -1,15 +1,15 @@
-<canvas id="shop_order_chart" width="400" height="400"></canvas>
+<canvas id="article_num_chart" width="400" height="400"></canvas>
 <script>
     $(function () {
-        var ctx = document.getElementById("shop_order_chart").getContext('2d');
-        var shop_order_chart = new Chart(ctx, {
-            type: 'line',
+        var ctx = document.getElementById("article_num_chart").getContext('2d');
+        var article_num_chart = new Chart(ctx, {
+            type: 'bar',
             data: {
-                labels: JSON.parse('{!! $sop_time !!}'),
+                labels: JSON.parse('{!! $time !!}'),
                 datasets: [{
-                    label: '消费金额',
-                    data: JSON.parse('{!! $sop_price !!}'),
-                    backgroundColor: 'rgba(255, 194, 97,100)',
+                    label: '文章数量',
+                    data: JSON.parse('{!! $count !!}'),
+                    backgroundColor: 'rgba(255,113,159,100)',
                     borderColor: 'rgba(255, 255, 255, 1)',
                     borderWidth: 1
                 }]

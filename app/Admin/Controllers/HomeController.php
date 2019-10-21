@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\ActivityOrder;
 use App\Models\ActivityPayLog;
+use App\Models\Article;
 use App\Models\ShopOrder;
 use App\Models\ShopOrderPayLog;
 use App\Models\User;
@@ -62,15 +63,8 @@ class HomeController extends Controller
                                 $row->column(3, new Box('近30天商品订单消费趋势', view('admin.shop_order_statistics',['sop_time'=>json_encode($sop_time),'sop_price'=>json_encode($sop_price)])));
 
 
-
-
-
-
-
-
-
-
-                                $row->column(3, new Box('近30天', view('admin.consume_statistics')));
+                                list($a_time,$a_count) = Article::calc_article_in_30();
+                                $row->column(3, new Box('近30天', view('admin.article_num_statistics',['time'=>json_encode($a_time),'count'=>json_encode($a_count)])));
                             });
 
                         });

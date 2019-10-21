@@ -52,6 +52,7 @@ Route::group([
     $router->post('/shop_order_finish_refund', 'ShopOrderRefundController@finish_refund');
 
     $router->post('/shop_order_ship', 'ShopOrderController@order_ship');
+    $router->post('/modify_delivery', 'ShopOrderController@modify_delivery');
 });
 
 

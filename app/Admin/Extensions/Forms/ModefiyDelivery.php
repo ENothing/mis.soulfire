@@ -10,9 +10,9 @@ namespace App\Admin\Extensions\Forms;
 
 use Encore\Admin\Form\Field;
 
-class ShopOrderShip extends Field
+class ModefiyDelivery extends Field
 {
-    protected $view = "admin.shop_order_ship";
+    protected $view = "admin.modefiy_delivery";
 
 
     public function __construct(string $column = '', array $arguments = [])
@@ -31,12 +31,12 @@ class ShopOrderShip extends Field
 
         $this->script = <<<EOT
 
-          $("#agree_ship").click(function () {
+          $("#modefiy_delivery").click(function () {
           
                 var express_id = $('select[name="shop_order_delivery[express_id]"]').val();
-                var delivery_n = $("input[name='delivery_n']").val();
+                var delivery_n = $("#shop_order_delivery_delivery_n").val();
           
-                $.post('/admin/api/shop_order_ship',{id:"{$id}",express_id:express_id,delivery_n:delivery_n,_token:"{$token}"},function(res){
+                $.post('/admin/api/modify_delivery',{id:"{$id}",express_id:express_id,delivery_n:delivery_n,_token:"{$token}"},function(res){
                         console.log(res)
 //                    if(res.code == 200){
 //                        alert(res.msg);

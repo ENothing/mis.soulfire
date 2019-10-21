@@ -17,6 +17,7 @@ class ShopOrder extends AppModel
 
 
     protected $table = "shop_orders";
+    protected $guarded = [];
 
     public function shop_order_goods()
     {
