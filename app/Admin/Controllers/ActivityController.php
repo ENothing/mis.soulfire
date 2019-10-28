@@ -49,7 +49,7 @@ class ActivityController extends AdminController
 //        $grid->column('content', __('内容'));
         $grid->column('person_limit', __('人数限制'));
         $grid->column('view', __('浏览数'))->sortable();
-        $grid->column('favor', __('点赞数'))->sortable();
+        $grid->column('likes', __('点赞数'))->sortable();
         $grid->column('start_at', __('开始时间'));
         $grid->column('end_at', __('结束时间'));
         $grid->column('start_enter_at', __('开始报名时间'));
