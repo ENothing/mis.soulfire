@@ -45,13 +45,7 @@ class UserController extends AdminController
 
         $grid->column('nickname', __('昵称'));
         $grid->column('openid', __('Openid'));
-        $grid->column('level',__('等级'))->display(function () {
 
-            $level = UserLevel::with("level")->where('user_id',$this->id)->first();
-
-            return $level->level->name;
-
-        });
         $grid->column('head_url','头像')->image('',95,95);
         $grid->column('mobile', __('手机号'));
         $grid->column('email', __('邮箱'));
@@ -115,29 +109,29 @@ class UserController extends AdminController
         $form->image('head_url','头像')->readonly();
         $form->mobile('mobile', __('手机号'))->readonly();
         $form->email('email', __('邮箱'))->readonly();
-        $form->display("user_id",__('等级'))->with(function (){
-
-
-            $level = UserLevel::with("level")->where('user_id',$this->id)->first();
-
-            return $level->level->name;
-
-
-        });
-        $form->display("parent_id",__('邀请人'))->with(function ($parent_id){
-
-
-            if ($parent_id == 0){
-
-                return "暂无";
-
-            }
-
-
-            return User::find($parent_id)->nickname;
-
-
-        });
+//        $form->display("user_id",__('等级'))->with(function (){
+//
+//
+//            $level = UserLevel::with("level")->where('user_id',$this->id)->first();
+//
+//            return $level->level->name;
+//
+//
+//        });
+//        $form->display("parent_id",__('邀请人'))->with(function ($parent_id){
+//
+//
+//            if ($parent_id == 0){
+//
+//                return "暂无";
+//
+//            }
+//
+//
+//            return User::find($parent_id)->nickname;
+//
+//
+//        });
         $form->text('invitation_code', __('邀请码'))->readonly();
         $states = [
             'on'  => ['value' => 1, 'text' => '是', 'color' => 'success'],

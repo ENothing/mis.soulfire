@@ -11,13 +11,13 @@ class ShopGoods extends AppModel
 
     public function setBannersAttribute($val)
     {
-        $this->attributes['banners'] = serialize($val);
+        $this->attributes['banners'] = json_encode($val);
 
     }
 
     public function getBannersAttribute($val)
     {
-        return unserialize($val);
+        return json_decode($val);
 
     }
 

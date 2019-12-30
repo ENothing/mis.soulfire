@@ -49,12 +49,12 @@ class ShopGoodsController extends AdminController
         $grid->column('ori_price', __('原价'))->sortable();
         $grid->column('stock', __('库存'))->sortable();
         $grid->column('sold', __('已售'))->sortable();
-        $grid->column('is_level', __('是否参与等级'))->display(function ($is_level) {
-
-            return $is_level == 0 ? "否" : "是";
-
-        })->filter([1=>"是",0=>"否"]);
-        $grid->level('level_id')->name(__('等级名称'));
+//        $grid->column('is_level', __('是否参与等级'))->display(function ($is_level) {
+//
+//            return $is_level == 0 ? "否" : "是";
+//
+//        })->filter([1=>"是",0=>"否"]);
+//        $grid->level('level_id')->name(__('等级名称'));
 
         $states = [
             'on'  => ['value' => 1, 'text' => '是', 'color' => 'success'],
@@ -117,8 +117,8 @@ class ShopGoodsController extends AdminController
         $form->decimal('ori_price', __('原价'))->default(0.00);
         $form->number('stock', __('库存'))->default(0)->min(0);
         $form->number('sold', __('已售'))->default(0)->min(0);
-        $form->radio('is_level', __('是否参与等级'))->options(['1' => '是', '0' => '否'])->default('0');
-        $form->select('level_id', __('等级'))->options(Level::all()->pluck("name", 'id'));
+//        $form->radio('is_level', __('是否参与等级'))->options(['1' => '是', '0' => '否'])->default('0');
+//        $form->select('level_id', __('等级'))->options(Level::all()->pluck("name", 'id'));
 
         $form->hasMany("shop_goods_spu", __('规格'), function (Form\NestedForm $form) {
             $form->text('name', __('规格名'));

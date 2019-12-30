@@ -185,13 +185,13 @@ class ShopOrderController extends AdminController
 
                 $user_coupon = UserCoupon::with('coupon')->find($user_coupon_id);
 
-                switch ($user_coupon->coupon_type){
+                switch ($user_coupon->coupon->coupon_type){
                     case 1:
-                        return "满 ".$user_coupon->full_price . " 减 ".$user_coupon->reduction_price;
+                        return "满 ".$user_coupon->coupon->full_price . " 减 ".$user_coupon->coupon->reduction_price;
                     case 2:
-                        return "立减 ".$user_coupon->immediately_price;
+                        return "立减 ".$user_coupon->coupon->immediately_price;
                     case 3:
-                        return $user_coupon->discount." 折";
+                        return $user_coupon->coupon->discount." 折";
                 }
 
             });
