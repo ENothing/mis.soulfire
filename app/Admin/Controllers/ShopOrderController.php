@@ -79,7 +79,7 @@ class ShopOrderController extends AdminController
         $grid->column("status", __('订单状态'))->display(function ($status){
 
            $order_refund = ShopOrderRefund::find($this->refund_id);
-           if ($order_refund && $order_refund->status != ShopOrderRefund::CANCEL_REFUND && $order_refund->status != ShopOrderRefund::FAILD_REFUND){
+           if ($order_refund && $order_refund->status != ShopOrderRefund::CANCEL_REFUND ){
                switch ($order_refund->status){
                    case 0:
                        return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;发起退款';
@@ -87,6 +87,8 @@ class ShopOrderController extends AdminController
                        return '<span class="label-info" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;退款中';
                    case 3:
                        return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;完成退款';
+                   case 4:
+                       return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;驳回退款';
                }
            }
 
