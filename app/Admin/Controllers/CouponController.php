@@ -71,7 +71,7 @@ class CouponController extends AdminController
         $grid->column('is_timeing', __('使用时间限制'))->display(function ($is_timeing) {
             switch ($is_timeing){
                 case 0:
-                    return "领取后 <span style='color: red'>".$this->day."</span> 天内可使用";
+                    return "领取后 <span style='color: red'>".$this->use_day."</span> 天内可使用";
                 case 1:
                     return $this->start_use_time." - ".$this->end_use_time;
 
@@ -79,7 +79,7 @@ class CouponController extends AdminController
         });
 //        $grid->column('start_use_time', __('开始使用时间'));
 //        $grid->column('end_use_time', __('结束使用时间'));
-//        $grid->column('day', __('领取后可使用天数'));
+        $grid->column('use_day', __('领取后可使用天数'));
         $grid->column('created_at', __('创建时间'))->sortable();
         $grid->column('updated_at', __('更新时间'));
 
@@ -141,7 +141,7 @@ class CouponController extends AdminController
 
         $form->switch('is_timeing', __('是否设置使用时间限制'))->states($states);
         $form->datetimeRange('start_use_time', 'end_use_time', '使用时间');
-        $form->number('day', __('领取后可使用天数'))->min(0)->default(0);
+        $form->number('use_day', __('领取后可使用天数'))->min(0)->default(0);
 
         return $form;
     }

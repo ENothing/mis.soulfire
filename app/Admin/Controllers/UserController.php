@@ -30,7 +30,7 @@ class UserController extends AdminController
         $grid->disableRowSelector();
 //        $grid->column('id', __('Id'));
 
-        $grid->filter(function($filter){
+        $grid->filter(function ($filter) {
             $filter->expand();
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
@@ -46,11 +46,11 @@ class UserController extends AdminController
         $grid->column('nickname', __('昵称'));
         $grid->column('openid', __('Openid'));
 
-        $grid->column('head_url','头像')->image('',95,95);
+        $grid->column('head_url', '头像')->image('', 95, 95);
         $grid->column('mobile', __('手机号'));
         $grid->column('email', __('邮箱'));
         $states = [
-            'on'  => ['value' => 1, 'text' => '是', 'color' => 'success'],
+            'on' => ['value' => 1, 'text' => '是', 'color' => 'success'],
             'off' => ['value' => 0, 'text' => '否', 'color' => 'info'],
         ];
         $grid->column('is_ban', __('是否禁用'))->switch($states)->filter([
@@ -106,7 +106,9 @@ class UserController extends AdminController
 //        $form->text('openid', __('Openid'));
         $form->text('nickname', __('昵称'))->readonly();
 //        $form->text('head_url', __('头像'))->readonly();
-        $form->image('head_url','头像')->readonly();
+        $form->display("head_url")->with(function ($value) {
+            return "<img src='$value' />";
+        });
         $form->mobile('mobile', __('手机号'))->readonly();
         $form->email('email', __('邮箱'))->readonly();
 //        $form->display("user_id",__('等级'))->with(function (){
@@ -134,7 +136,7 @@ class UserController extends AdminController
 //        });
         $form->text('invitation_code', __('邀请码'))->readonly();
         $states = [
-            'on'  => ['value' => 1, 'text' => '是', 'color' => 'success'],
+            'on' => ['value' => 1, 'text' => '是', 'color' => 'success'],
             'off' => ['value' => 0, 'text' => '否', 'color' => 'info'],
         ];
 

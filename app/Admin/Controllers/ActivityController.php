@@ -123,6 +123,9 @@ class ActivityController extends AdminController
         $form->number('person_limit', __('人数限制'))->default(0)->min(0);
         $form->number('view', __('浏览数'))->default(0)->min(0);
         $form->number('like', __('点赞数'))->default(0)->min(0);
+        $form->decimal('cur_price', __('现价'))->default(0.00);
+        $form->decimal('ori_price', __('原价'))->default(0.00);
+        $form->number('sold', __('已售'))->default(0)->min(0);
         $states = [
             'on'  => ['value' => 1, 'text' => '是', 'color' => 'success'],
             'off' => ['value' => 0, 'text' => '否', 'color' => 'default'],
