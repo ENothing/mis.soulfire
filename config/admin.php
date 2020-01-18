@@ -402,7 +402,7 @@ return [
 
             // 编辑器的配置
             'config' => [
-
+                'uploadImgServer' => '/admin/api/upload'
             ]
         ],
         'chartjs' => [

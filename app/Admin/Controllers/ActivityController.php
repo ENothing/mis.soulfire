@@ -96,7 +96,7 @@ class ActivityController extends AdminController
         $show->field('end_enter_at', __('结束报名时间'));
         $show->field('person_limit', __('人数限制'));
         $show->field('view', __('浏览数'));
-        $show->field('like', __('点赞数'));
+        $show->field('likes', __('点赞数'));
         $show->field('created_at', __('创建时间'));
         $show->field('updated_at', __('更新时间'));
 
@@ -122,10 +122,9 @@ class ActivityController extends AdminController
         $form->datetime('end_enter_at', __('结束报名时间'))->default(date('Y-m-d H:i:s'));
         $form->number('person_limit', __('人数限制'))->default(0)->min(0);
         $form->number('view', __('浏览数'))->default(0)->min(0);
-        $form->number('like', __('点赞数'))->default(0)->min(0);
+        $form->number('likes', __('点赞数'))->default(0)->min(0);
         $form->decimal('cur_price', __('现价'))->default(0.00);
         $form->decimal('ori_price', __('原价'))->default(0.00);
-        $form->number('sold', __('已售'))->default(0)->min(0);
         $states = [
             'on'  => ['value' => 1, 'text' => '是', 'color' => 'success'],
             'off' => ['value' => 0, 'text' => '否', 'color' => 'default'],

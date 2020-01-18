@@ -53,6 +53,8 @@ Route::group([
 
     $router->post('/shop_order_ship', 'ShopOrderController@order_ship');
     $router->post('/modify_delivery', 'ShopOrderController@modify_delivery');
+
+    $router->post('/upload', 'FileController@upload');
 });
 
 

@@ -68,8 +68,10 @@ class BannerController extends AdminController
 
         $form->select('cate_id', __('分类'))->options(BannerCate::all()->pluck("name","id"));
         $form->image('thumb', __('图片'));
-        $form->url('url', __('链接'));
-
+        $form->file("video_url","视频");
+        $form->text('url', __('链接'));
+        $form->text('content', __('短文本'));
+        $form->radio('show_type', __('展示类型'))->options([0 => '多媒体', 1=> '文字'])->default(0);
         return $form;
     }
 }
