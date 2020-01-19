@@ -11,9 +11,12 @@ class FileController extends Controller
     public function upload(Request $request)
     {
         $urls = [];
-
+        $disk = Storage::disk('qiniu');
         foreach ($request->file() as $file) {
-            $urls[] = Storage::url($file->store("public/images"));
+
+            $disk->put('images',$file);
+            $urls[] = $disk->imagePreviewUrl($disk->lastReturn()["key"]);
+
         }
 
         return [
