@@ -28,6 +28,7 @@ class ActivityCateController extends AdminController
         $grid->disableFilter();
         $grid->column('id', __('Id'));
         $grid->column('name', __('类名'));
+        $grid->column('icon_url', __('图标'))->image('', 100, 100);
 
         return $grid;
     }
@@ -58,6 +59,7 @@ class ActivityCateController extends AdminController
         $form = new Form(new ActivityCate);
 
         $form->text('name', __('类名'));
+        $form->image('icon_url', __('图标'));
 
         return $form;
     }

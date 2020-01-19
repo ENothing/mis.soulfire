@@ -13,4 +13,9 @@ class Activity extends AppModel
         return $this->belongsTo(ActivityCate::class,'cate_id','id');
 
     }
+    public function setThumbAttribute($value)
+    {
+        $this->attributes['thumb'] = "http://".config("filesystems.disks.qiniu.domains.default")."/$value";
+    }
+
 }

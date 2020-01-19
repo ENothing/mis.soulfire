@@ -15,4 +15,17 @@ class Banner extends AppModel
 
     }
 
+    public function setThumbAttribute($value)
+    {
+
+        $this->attributes['thumb'] = "http://".config("filesystems.disks.qiniu.domains.default")."/$value";
+    }
+
+    public function setVideoUrlAttribute($value)
+    {
+
+        $this->attributes['video_url'] = "http://".config("filesystems.disks.qiniu.domains.default")."/$value";
+    }
+
+
 }

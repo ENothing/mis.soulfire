@@ -113,6 +113,7 @@ class ActivityController extends AdminController
         $form = new Form(new Activity);
 
         $form->text('title', __('标题'));
+        $form->text('intro', __('简介'));
         $form->image('thumb', __('封面'));
         $form->select('cate_id', __('活动分类'))->options(ActivityCate::all()->pluck("name","id"));
         $form->editor('content', __('内容'));
