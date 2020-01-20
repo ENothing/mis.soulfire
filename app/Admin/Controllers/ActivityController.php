@@ -122,6 +122,7 @@ class ActivityController extends AdminController
         $form->datetime('start_enter_at', __('开始报名时间'))->default(date('Y-m-d H:i:s'));
         $form->datetime('end_enter_at', __('结束报名时间'))->default(date('Y-m-d H:i:s'));
         $form->number('person_limit', __('人数限制'))->default(0)->min(0);
+        $form->text('mobile', __('活动联系人电话'));
         $form->number('view', __('浏览数'))->default(0)->min(0);
         $form->number('likes', __('点赞数'))->default(0)->min(0);
         $form->decimal('cur_price', __('现价'))->default(0.00);

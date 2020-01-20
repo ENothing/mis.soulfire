@@ -22,6 +22,13 @@ class Article extends AppModel
 
     }
 
+    public function setThumbAttribute($value)
+    {
+
+        $this->attributes['thumb'] = "http://".config("filesystems.disks.qiniu.domains.default")."/$value";
+    }
+
+
 
     public static function calc_article_in_30()
     {

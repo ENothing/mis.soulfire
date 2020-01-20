@@ -45,7 +45,7 @@ class ArticleController extends AdminController
         $grid->article_cate()->name(__('文章类型'));
         $grid->column('thumb', __('封面'))->image('',150,150);
 //        $grid->column('content', __('内容'));
-        $grid->column('like', __('点赞数'))->sortable();
+        $grid->column('likes', __('点赞数'))->sortable();
         $grid->column('view', __('浏览量'))->sortable();
         $grid->column('created_at', __('创建时间'))->sortable();
         $grid->column('updated_at', __('更新时间'));
@@ -94,7 +94,7 @@ class ArticleController extends AdminController
         $form->select('cate_id', __('文章分类'))->options(ArticleCate::all()->pluck("name","id"));
         $form->select('user_id', __('作者'))->options(User::all()->pluck("nickname","id"));
         $form->editor('content', __('内容'));
-        $form->number('like', __('点赞数'))->min(0)->default(0);
+        $form->number('likes', __('点赞数'))->min(0)->default(0);
         $form->number('view', __('浏览量'))->min(0)->default(0);
 
         return $form;
