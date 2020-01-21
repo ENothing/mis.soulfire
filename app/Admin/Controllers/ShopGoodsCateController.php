@@ -31,6 +31,7 @@ class ShopGoodsCateController extends AdminController
         $grid->disableFilter();
         $grid->column('id', __('Id'));
         $grid->column('name', __('类名'));
+        $grid->column('icon_url', __('图标'))->image('', 100, 100);
         $grid->actions(function ($actions) {
             $actions->disableDelete();
             // 去掉查看
@@ -70,6 +71,7 @@ class ShopGoodsCateController extends AdminController
         $form = new Form(new ShopGoodsCate);
 
         $form->text('name', __('类名'));
+        $form->image('icon_url', __('图标'));
         $form->deleting(function (Form $form) {
 
             $id = request()->route()->parameters()['shop_goods_cate'];

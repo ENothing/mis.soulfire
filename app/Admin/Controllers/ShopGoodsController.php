@@ -109,7 +109,8 @@ class ShopGoodsController extends AdminController
         // 在这一列中加入表单项
 
         $form->text('name', __('商品名称'));
-        $form->select('cate_id', __('商品分类'))->options(ShopGoodsCate::all()->pluck("name", "id"))->load('brand_id', '/admin/api/brands');
+//        $form->select('cate_id', __('商品分类'))->options(ShopGoodsCate::all()->pluck("name", "id"))->load('brand_id', '/admin/api/brands');
+        $form->select('cate_id', __('商品分类'))->options(ShopGoodsCate::all()->pluck("name", "id"));
         $form->select('brand_id', __('品牌分类'))->options(ShopGoodsBrand::all()->pluck("name", "id"));
         $form->image('thumb', __('封面'));
         $form->multipleImage('banners', __('商品banner'))->removable()->sortable();

@@ -9,8 +9,18 @@ class ShopGoods extends AppModel
     protected $table = "shop_goods";
     protected $fillable = [];
 
+
+    public function setThumbAttribute($value)
+    {
+
+        $this->attributes['thumb'] = "http://".config("filesystems.disks.qiniu.domains.default")."/$value";
+    }
+
     public function setBannersAttribute($val)
     {
+        foreach ($val as $k => $v){
+            $val[$k]= "http://".config("filesystems.disks.qiniu.domains.default")."/$v";
+        }
         $this->attributes['banners'] = json_encode($val);
 
     }
