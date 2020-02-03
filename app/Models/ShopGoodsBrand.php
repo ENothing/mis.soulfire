@@ -10,4 +10,8 @@ class ShopGoodsBrand extends AppModel
     public $timestamps = false;
     protected $guarded = [];
 
+    public function setLogoAttribute($value)
+    {
+        $this->attributes['logo'] = "http://".config("filesystems.disks.qiniu.domains.default")."/$value";
+    }
 }
