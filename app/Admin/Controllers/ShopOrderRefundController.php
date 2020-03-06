@@ -36,7 +36,7 @@ class ShopOrderRefundController extends AdminController
             $filter->equal('shop_order.order_n', __('订单编号'));
             $filter->equal('refund_n', __('退款单号'));
             $filter->between('created_at', __('创建时间'))->datetime();
-            $filter->equal('type', __('退款类型'))->radio([
+            $filter->equal('r_type', __('退款类型'))->radio([
                 ''   => '全部',
                 1    => '仅退款',
                 2    => '退货退款',
@@ -55,7 +55,7 @@ class ShopOrderRefundController extends AdminController
         $grid->column('refund_n', __('退款单号'));
         $grid->shop_order('order_id', __('order_id'))->order_n(__('订单编号'));
 //        $grid->column('order_goods_id', __('Order goods id'));
-        $grid->column('type', __('退款类型'))->display(function ($type){
+        $grid->column('r_type', __('退款类型'))->display(function ($type){
 
             return $type == 1 ? "仅退款":"退货退款";
 
@@ -136,7 +136,7 @@ class ShopOrderRefundController extends AdminController
         $form->column(1/2, function ($form) {
             $form->display('refund_n', __('退款单号'));
             $form->decimal('price', __('金额'))->readonly();
-            $form->display('type', __('退款类型'))->with(function ($type){
+            $form->display('r_type', __('退款类型'))->with(function ($type){
 
                 return $type == 1 ? "仅退款":"退货退款";
 
@@ -149,11 +149,15 @@ class ShopOrderRefundController extends AdminController
                     case 1:
                         return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;取消退款';
                     case 2:
-                        return '<span class="label-primary" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;退款中';
+                        return '<span class="label-primary" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;审核通过';
                     case 3:
                         return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已退款';
                     case 4:
                         return '<span class="label-danger" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;驳回退款';
+                    case 5:
+                        return '<span class="label-danger" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;同意退款';
+                    case 6:
+                        return '<span class="label-danger" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;运单审核';
                 }
             });
             $form->multipleImage('reason_pics', __('原因附图'))->readonly();
@@ -161,7 +165,7 @@ class ShopOrderRefundController extends AdminController
             $form->divider();
             $form->textarea('reply_reason', __('驳回原因'));
 
-
+            $form->radio('r_way',"退款平台")->options([1 => '微信', 2=> '支付宝'])->default(1);
             $form->shop_order_agree_refund();
 
 
@@ -172,16 +176,16 @@ class ShopOrderRefundController extends AdminController
         $form->column(1/2, function ($form) {
 
 
-            $form->hasMany('sorg_with_og', __('商品'), function (Form\NestedForm $form) {
-                $form->display('shop_order_goods.shop_goods.thumb',__('商品封面'))->with(function ($thumb){
-                    return '<img src="'.env('APP_URL').'/storage/'. $thumb.'" style="width:100px;height:100px">';
-                });
-                $form->text('shop_order_goods.shop_goods.name',__('商品名称'))->readonly();
-                $form->display('shop_order_goods.num',__('数量'));
-                $form->text('shop_order_goods.shop_goods_spu.name',__('商品规格'))->readonly();
-                $form->text('shop_order_goods.shop_goods_spu.price',__('商品价格'))->readonly();
-
-            })->disableDelete()->disableCreate();
+//            $form->hasMany('sorg_with_og', __('商品'), function (Form\NestedForm $form) {
+////                $form->display('shop_order_goods.shop_goods.thumb',__('商品封面'))->with(function ($thumb){
+////                    return '<img src="'.env('APP_URL').'/storage/'. $thumb.'" style="width:100px;height:100px">';
+////                });
+//                $form->text('shop_order_goods.shop_goods.name',__('商品名称'))->readonly();
+//                $form->display('shop_order_goods.num',__('数量'));
+//                $form->text('shop_order_goods.shop_goods_spu.name',__('商品规格'))->readonly();
+//                $form->text('shop_order_goods.shop_goods_spu.price',__('商品价格'))->readonly();
+//
+//            })->disableDelete()->disableCreate();
 
 
 

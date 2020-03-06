@@ -21,6 +21,29 @@ class ShopOrderRefundController extends Controller
     {
 
         $id = $request->post('id');
+        $r_way = $request->post('r_way');
+
+        $order_refund = ShopOrderRefund::find($id);
+
+        if (is_null($order_refund)){
+
+            return $this->failed("数据不存在");
+        }
+
+
+        $order_refund->update([
+            'status'=>2,
+            'r_status'=>2,
+            'r_way'=>$r_way
+        ]);
+
+        return $this->success();
+    }
+
+    public function pass_refund(Request $request)
+    {
+
+        $id = $request->post('id');
 
         $order_refund = ShopOrderRefund::find($id);
 

@@ -31,6 +31,7 @@ class ShopOrderController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new ShopOrder);
+        $grid->model()->orderBy('created_at', 'desc');
         $grid->filter(function($filter){
 
             // 去掉默认的id过滤器
@@ -256,7 +257,7 @@ class ShopOrderController extends AdminController
         $form->column(1/2, function ($form) {
             $form->hasMany('shop_order_goods_with_goods', __('商品'), function (Form\NestedForm $form) {
                 $form->display('shop_goods.thumb',__('商品封面'))->with(function ($thumb){
-                    return '<img src="'.env('APP_URL').'/storage/'. $thumb.'" style="width:100px;height:100px">';
+                    return '<img src="'.$thumb.'">';
                 });
                 $form->text('shop_goods.name',__('商品名称'))->readonly();
                 $form->display('num',__('数量'));

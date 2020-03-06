@@ -12,7 +12,7 @@ use Encore\Admin\Form\Field;
 
 class ShopOrderAgreeRefund extends Field
 {
-    protected $view = "admin.activity_order_agree_refund";
+    protected $view = "admin.shop_order_agree_refund";
 
 
     public function __construct(string $column = '', array $arguments = [])
@@ -26,14 +26,28 @@ class ShopOrderAgreeRefund extends Field
         $id = $this->form->model()->id;
         $token = csrf_token();
         $this->variables = [
-            'status'=>$this->form->model()->status
+            'status'=>$this->form->model()->status,
+            'r_type'=>$this->form->model()->r_type
         ];
 
         $this->script = <<<EOT
 
           $("#agree_refund").click(function () {
           
-                $.post('/admin/api/shop_order_agree_refund',{id:"{$id}",_token:"{$token}"},function(res){
+                var r_way = $("input[name='r_way']").val();
+                $.post('/admin/api/shop_order_agree_refund',{id:"{$id}",r_way:r_way,_token:"{$token}"},function(res){
+                    if(res.code == 200){
+                        alert(res.msg);
+                        window.location.reload();
+                    }
+                    alert(res.msg);
+                })
+
+          })
+
+          $("#pass_refund").click(function () {
+          
+                $.post('/admin/api/shop_order_pass_refund',{id:"{$id}",_token:"{$token}"},function(res){
                     if(res.code == 200){
                         alert(res.msg);
                         window.location.reload();

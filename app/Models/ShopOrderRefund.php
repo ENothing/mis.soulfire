@@ -15,6 +15,7 @@ class ShopOrderRefund extends AppModel
 
     //
     protected $table = "shop_order_refunds";
+    protected $guarded = [];
 
     public function shop_order()
     {
