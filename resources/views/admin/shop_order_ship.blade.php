@@ -1,4 +1,4 @@
-@if ($status == 2)
+@if ($status == 2 && $refund_id == 0)
     <div class="box-footer">
         <div class="col-md-2">
         </div>

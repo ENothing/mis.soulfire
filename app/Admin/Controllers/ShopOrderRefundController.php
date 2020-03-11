@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Express;
 use App\Models\ShopOrderRefund;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -69,12 +70,16 @@ class ShopOrderRefundController extends AdminController
             2 => '退款中',
             3 => '已退款',
             4 => '驳回退款',
+            5=>'同意退款',
+            6=>'等待审核货运信息'
         ], '未知')->dot([
             0 => 'warning',
             1 => 'default',
             2 => 'primary',
             3 => 'success',
             4 => 'danger',
+            5=>'success',
+            6=>'warning'
         ], 'danger');
 
         $grid->column('price', __('金额'))->sortable();
@@ -136,12 +141,12 @@ class ShopOrderRefundController extends AdminController
         $form->column(1/2, function ($form) {
             $form->display('refund_n', __('退款单号'));
             $form->decimal('price', __('金额'))->readonly();
-            $form->display('r_type', __('退款类型'))->with(function ($type){
-
-                return $type == 1 ? "仅退款":"退货退款";
-
-            });
-
+//            $form->display('r_type', __('退款类型'))->with(function ($type){
+//
+//                return $type == 1 ? "仅退款":"退货退款";
+//
+//            });
+            $form->radio('r_type', __('退款类型'))->options(['1' => '仅退款', '2'=> '退款退货'])->stacked();
             $form->display('status', __('退款状态'))->with(function ($status){
                 switch ($status){
                     case 0:
@@ -155,9 +160,9 @@ class ShopOrderRefundController extends AdminController
                     case 4:
                         return '<span class="label-danger" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;驳回退款';
                     case 5:
-                        return '<span class="label-danger" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;同意退款';
+                        return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;同意退款';
                     case 6:
-                        return '<span class="label-danger" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;运单审核';
+                        return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;等待审核货运信息';
                 }
             });
             $form->multipleImage('reason_pics', __('原因附图'))->readonly();
@@ -189,7 +194,10 @@ class ShopOrderRefundController extends AdminController
 
 
 
-
+            $form->fieldset('快递', function (Form $form) {
+                $form->select('shop_order_delivery.express_id', '快递名称')->options(Express::all()->pluck("name", "id"));
+                $form->text('express_n', "快递单号");
+            });
 
         });
 

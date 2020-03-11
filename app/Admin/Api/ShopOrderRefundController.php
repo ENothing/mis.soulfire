@@ -21,7 +21,7 @@ class ShopOrderRefundController extends Controller
     {
 
         $id = $request->post('id');
-        $r_way = $request->post('r_way');
+
 
         $order_refund = ShopOrderRefund::find($id);
 
@@ -33,8 +33,7 @@ class ShopOrderRefundController extends Controller
 
         $order_refund->update([
             'status'=>2,
-            'r_status'=>2,
-            'r_way'=>$r_way
+
         ]);
 
         return $this->success();
@@ -54,7 +53,7 @@ class ShopOrderRefundController extends Controller
 
 
         $order_refund->update([
-            'status'=>2
+            'status'=>5
         ]);
 
         return $this->success();
@@ -85,6 +84,7 @@ class ShopOrderRefundController extends Controller
     public function finish_refund(Request $request)
     {
         $id = $request->post('id');
+        $r_way = $request->post('r_way');
 
         $order_refund = ShopOrderRefund::find($id);
 
@@ -96,6 +96,29 @@ class ShopOrderRefundController extends Controller
 
         $order_refund->update([
             'status'=>3,
+            'r_status'=>2,
+            'r_way'=>$r_way
+        ]);
+
+        return $this->success();
+    }
+
+    public function reagree_refund(Request $request)
+    {
+        $id = $request->post('id');
+        $r_type = $request->post('r_type');
+
+        $order_refund = ShopOrderRefund::find($id);
+
+        if (is_null($order_refund)){
+
+            return $this->failed("数据不存在");
+        }
+
+
+        $order_refund->update([
+            'status'=>5,
+            'r_type'=>$r_type
         ]);
 
         return $this->success();

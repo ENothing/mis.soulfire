@@ -37,15 +37,31 @@ class ModefiyDelivery extends Field
                 var delivery_n = $("#shop_order_delivery_delivery_n").val();
           
                 $.post('/admin/api/modify_delivery',{id:"{$id}",express_id:express_id,delivery_n:delivery_n,_token:"{$token}"},function(res){
-                        console.log(res)
-//                    if(res.code == 200){
-//                        alert(res.msg);
-////                        window.location.reload();
-//                    }
-//                    alert(res.msg);
+                        
+                    if(res.code == 200){
+                        alert(res.msg);
+                        window.location.reload();
+                        return;
+                    }
+                    alert(res.msg);
                 })
 
           })
+          
+          $("#finish_order").click(function () {
+          
+                $.post('/admin/api/finish_order',{id:"{$id}",_token:"{$token}"},function(res){
+                        
+                    if(res.code == 200){
+                        alert(res.msg);
+                        window.location.reload();
+                        return;
+                    }
+                    alert(res.msg);
+                })
+
+          })          
+          
           
 EOT;
 

@@ -8,6 +8,9 @@
             </div>
             <div class="col-md-2">
             </div>
+            <div class="btn-group pull-left">
+                <button type="button" class="btn btn-success" id="finish_order">已完成</button>
+            </div>
         </div>
     </div>
 @endif

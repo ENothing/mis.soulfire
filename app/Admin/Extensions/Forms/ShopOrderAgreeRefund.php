@@ -34,11 +34,12 @@ class ShopOrderAgreeRefund extends Field
 
           $("#agree_refund").click(function () {
           
-                var r_way = $("input[name='r_way']").val();
-                $.post('/admin/api/shop_order_agree_refund',{id:"{$id}",r_way:r_way,_token:"{$token}"},function(res){
+                
+                $.post('/admin/api/shop_order_agree_refund',{id:"{$id}",_token:"{$token}"},function(res){
                     if(res.code == 200){
                         alert(res.msg);
                         window.location.reload();
+                        return;
                     }
                     alert(res.msg);
                 })
@@ -51,6 +52,7 @@ class ShopOrderAgreeRefund extends Field
                     if(res.code == 200){
                         alert(res.msg);
                         window.location.reload();
+                        return;
                     }
                     alert(res.msg);
                 })
@@ -65,6 +67,7 @@ class ShopOrderAgreeRefund extends Field
                     if(res.code == 200){
                         alert(res.msg);
                         window.location.reload();
+                        return;
                     }
                     alert(res.msg);
                 })
@@ -72,18 +75,30 @@ class ShopOrderAgreeRefund extends Field
           })
           $("#finish_refund").click(function () {
           
-                var reply_reason = $("textarea[name='reply_reason']").val();
-                console.log(reply_reason)
-                $.post('/admin/api/shop_order_finish_refund',{id:"{$id}",_token:"{$token}"},function(res){
+                var r_way = $("input[name='r_way']:checked").val();
+                $.post('/admin/api/shop_order_finish_refund',{id:"{$id}",r_way:r_way,_token:"{$token}"},function(res){
                     if(res.code == 200){
                         alert(res.msg);
                         window.location.reload();
+                        return;
                     }
                     alert(res.msg);
                 })
 
           })
+          $("#reagree_refund").click(function () {
+          
+                var r_type = $("input[name='r_type']:checked").val();
+                $.post('/admin/api/shop_order_reagree_refund',{id:"{$id}",r_type:r_type,_token:"{$token}"},function(res){
+                    if(res.code == 200){
+                        alert(res.msg);
+                        window.location.reload();
+                        return;
+                    }
+                    alert(res.msg);
+                })
 
+          })
 EOT;
 
         return parent::render();

@@ -47,14 +47,16 @@ class ShopOrderController extends Controller
             }
 
 
-            ShopOrderDelivery::create([
-                'order_id' => $id,
-                'name' => $express->name,
-                'abbreviation' => $express->number,
-                'delivery_n' => $delivery_n,
-            ]);
+
 
         }
+        ShopOrderDelivery::create([
+            'order_id' => $id,
+            'name' => $express->name ?? "",
+            'abbreviation' => $express->shortName??"",
+            'delivery_n' => $delivery_n??"",
+            'express_id' => $express_id??0,
+        ]);
 
         $order->update([
             'status' => 3
@@ -109,6 +111,24 @@ class ShopOrderController extends Controller
         return $this->success("快递信息更新成功");
 
 
+    }
+
+    public function finish_order(Request $request)
+    {
+        $id = $request->post('id');
+        $order = ShopOrder::find($id);
+
+        if (is_null($order)) {
+
+            return $this->failed("数据不存在");
+        }
+
+        $order->update([
+            'status' => 4,
+            'completed_at'=>date('Y-m-d H:i:s')
+        ]);
+
+        return $this->success();
     }
 
 

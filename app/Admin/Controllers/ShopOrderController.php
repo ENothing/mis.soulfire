@@ -32,7 +32,7 @@ class ShopOrderController extends AdminController
     {
         $grid = new Grid(new ShopOrder);
         $grid->model()->orderBy('created_at', 'desc');
-        $grid->filter(function($filter){
+        $grid->filter(function ($filter) {
 
             // 去掉默认的id过滤器
             $filter->disableIdFilter();
@@ -40,25 +40,24 @@ class ShopOrderController extends AdminController
             // 在这里添加字段过滤器
 
 
-            $filter->column(1/2, function ($filter) {
-                $filter->like('user.nickname',__('用户昵称'));
-                $filter->like('name',__('姓名'));
-                $filter->equal('mobile',__('手机号'));
+            $filter->column(1 / 2, function ($filter) {
+                $filter->like('user.nickname', __('用户昵称'));
+                $filter->like('name', __('姓名'));
+                $filter->equal('mobile', __('手机号'));
             });
 
-            $filter->column(1/2, function ($filter) {
-                $filter->equal('order_n',__('订单编号'));
-                $filter->between('created_at',  __('创建时间'))->datetime();
+            $filter->column(1 / 2, function ($filter) {
+                $filter->equal('order_n', __('订单编号'));
+                $filter->between('created_at', __('创建时间'))->datetime();
 
 
                 $filter->in('status', __('订单状态'))->checkbox([
-                    0    => '待付款',
-                    1    => '订单取消',
-                    2    => '已付款待发货',
-                    3   => '已发货待收货',
-                    4    => '已完成',
+                    0 => '待付款',
+                    1 => '订单取消',
+                    2 => '已付款待发货',
+                    3 => '已发货待收货',
+                    4 => '已完成',
                 ]);
-
 
 
             });
@@ -69,7 +68,7 @@ class ShopOrderController extends AdminController
         $grid->disableRowSelector();
         $grid->disableCreateButton();
         $grid->column('id', __('Id'));
-        $grid->user('user_id', __('User id'))->nickname( __('用户昵称'));
+        $grid->user('user_id', __('User id'))->nickname(__('用户昵称'));
         $grid->column('order_n', __('订单编号'));
         $grid->column('num', __('商品总数'));
 //        $grid->column('unit_price', __('Unit price'));
@@ -77,41 +76,49 @@ class ShopOrderController extends AdminController
         $grid->column('real_price', __('实际支付'));
         $grid->column('discount_price', __('折扣金额'));
 
-        $grid->column("status", __('订单状态'))->display(function ($status){
+        $grid->column("status", __('订单状态'))->display(function ($status) {
 
-           $order_refund = ShopOrderRefund::find($this->refund_id);
-           if ($order_refund && $order_refund->status != ShopOrderRefund::CANCEL_REFUND ){
-               switch ($order_refund->status){
-                   case 0:
-                       return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;发起退款';
-                   case 2:
-                       return '<span class="label-info" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;退款中';
-                   case 3:
-                       return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;完成退款';
-                   case 4:
-                       return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;驳回退款';
-               }
-           }
 
-           switch ($status){
-               case 0:
-                   return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;待付款';
-               case 1:
-                   return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;订单取消';
-               case 2:
-                   return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已付款待发货';
-               case 3:
-                   return '<span class="label-primary" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已发货待收货';
-               case 4:
-                   return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已完成';
-               default:
-                   return '<span class="label-danger" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;未知';
-           }
+            if ($this->refund_id != 0) {
+                $order_refund = ShopOrderRefund::find($this->refund_id);
+
+                switch ($order_refund->status) {
+                    case 0:
+                        return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;发起退款';
+                    case 2:
+                        return '<span class="label-info" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;退款中';
+                    case 3:
+                        return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;完成退款';
+                    case 4:
+                        return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;驳回退款';
+                    case 5:
+                        return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;同意退款';
+                    case 6:
+                        return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;等待审核运单号';
+                }
+            } else {
+                switch ($status) {
+                    case 0:
+                        return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;待付款';
+                    case 1:
+                        return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;订单取消';
+                    case 2:
+                        return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已付款待发货';
+                    case 3:
+                        return '<span class="label-primary" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已发货待收货';
+                    case 4:
+                        return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已完成';
+                    default:
+                        return '<span class="label-danger" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;未知';
+                }
+            }
+
+
         });
 
         $grid->column('name', __('姓名'));
         $grid->column('mobile', __('手机号'));
-        $grid->column("address" ,__('收货地址'))->display(function () {
+        $grid->column("address", __('收货地址'))->display(function () {
             return $this->province . $this->city . $this->district . $this->detail_address;
         });
 //        $grid->column('province', __('省'));
@@ -174,13 +181,13 @@ class ShopOrderController extends AdminController
     {
         $form = new Form(new ShopOrder);
 
-        $form->column(1/2, function ($form) {
+        $form->column(1 / 2, function ($form) {
 
             $form->text('order_n', __('订单编号'))->readonly();
-            $form->select('user_id', __('用户昵称'))->options(User::all()->pluck("nickname",'id'))->readonly();
-            $form->display('user_coupon_id', __('优惠券'))->with(function ($user_coupon_id){
+            $form->select('user_id', __('用户昵称'))->options(User::all()->pluck("nickname", 'id'))->readonly();
+            $form->display('user_coupon_id', __('优惠券'))->with(function ($user_coupon_id) {
 
-                if ($user_coupon_id == 0){
+                if ($user_coupon_id == 0) {
 
                     return "未使用优惠券";
 
@@ -188,13 +195,13 @@ class ShopOrderController extends AdminController
 
                 $user_coupon = UserCoupon::with('coupon')->find($user_coupon_id);
 
-                switch ($user_coupon->coupon->coupon_type){
+                switch ($user_coupon->coupon->coupon_type) {
                     case 1:
-                        return "满 ".$user_coupon->coupon->full_price . " 减 ".$user_coupon->coupon->reduction_price;
+                        return "满 " . $user_coupon->coupon->full_price . " 减 " . $user_coupon->coupon->reduction_price;
                     case 2:
-                        return "立减 ".$user_coupon->coupon->immediately_price;
+                        return "立减 " . $user_coupon->coupon->immediately_price;
                     case 3:
-                        return $user_coupon->coupon->discount." 折";
+                        return $user_coupon->coupon->discount . " 折";
                 }
 
             });
@@ -203,33 +210,46 @@ class ShopOrderController extends AdminController
             $form->decimal('total_price', __('总价'))->default(0.00)->readonly();
             $form->decimal('discount_price', __('折扣金额'))->default(0.00)->readonly();
             $form->decimal('real_price', __('实际支付'))->default(0.00)->readonly();
-            $form->display('status', __('订单状态'))->with(function ($status){
+            $form->display('status', __('订单状态'))->with(function ($status) {
 
-                $order_refund = ShopOrderRefund::find($this->refund_id);
-                if ($order_refund && $order_refund->status != ShopOrderRefund::CANCEL_REFUND && $order_refund->status != ShopOrderRefund::FAILD_REFUND){
-                    switch ($order_refund->status){
+                if ($this->refund_id != 0) {
+
+
+                    $order_refund = ShopOrderRefund::find($this->refund_id);
+                    switch ($order_refund->status) {
                         case 0:
                             return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;发起退款';
+                        case 1:
+                            return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;取消退款';
                         case 2:
                             return '<span class="label-info" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;退款中';
                         case 3:
                             return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;完成退款';
+                        case 4:
+                            return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;驳回退款';
+                        case 5:
+                            return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;同意退款';
+                        case 6:
+                            return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;等待审核运单号';
                     }
-                }
 
-                switch ($status){
-                    case 0:
-                        return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;待付款';
-                    case 1:
-                        return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;订单取消';
-                    case 2:
-                        return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已付款待发货';
-                    case 3:
-                        return '<span class="label-primary" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已发货待收货';
-                    case 4:
-                        return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已完成';
-                    default:
-                        return '<span class="label-danger" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;未知';
+
+                } else {
+
+                    switch ($status) {
+                        case 0:
+                            return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;待付款';
+                        case 1:
+                            return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;订单取消';
+                        case 2:
+                            return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已付款待发货';
+                        case 3:
+                            return '<span class="label-primary" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已发货待收货';
+                        case 4:
+                            return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已完成';
+                        default:
+                            return '<span class="label-danger" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;未知';
+                    }
                 }
 
 
@@ -242,8 +262,8 @@ class ShopOrderController extends AdminController
             $form->text('detail_address', __('详细地址'));
 
             $form->fieldset('快递', function (Form $form) {
-                $form->select('shop_order_delivery.express_id','快递名称')->options(Express::all()->pluck("name","id"));
-                $form->text('shop_order_delivery.delivery_n',"快递单号");
+                $form->select('shop_order_delivery.express_id', '快递名称')->options(Express::all()->pluck("name", "id"));
+                $form->text('shop_order_delivery.delivery_n', "快递单号");
 
                 $form->modefiy_delivery();
                 $form->shop_order_ship();
@@ -251,18 +271,17 @@ class ShopOrderController extends AdminController
             });
 
 
-
         });
 
-        $form->column(1/2, function ($form) {
+        $form->column(1 / 2, function ($form) {
             $form->hasMany('shop_order_goods_with_goods', __('商品'), function (Form\NestedForm $form) {
-                $form->display('shop_goods.thumb',__('商品封面'))->with(function ($thumb){
-                    return '<img src="'.$thumb.'">';
+                $form->display('shop_goods.thumb', __('商品封面'))->with(function ($thumb) {
+                    return '<img src="' . $thumb . '">';
                 });
-                $form->text('shop_goods.name',__('商品名称'))->readonly();
-                $form->display('num',__('数量'));
-                $form->text('shop_goods_spu.name',__('商品规格'))->readonly();
-                $form->text('shop_goods_spu.price',__('商品价格'))->readonly();
+                $form->text('shop_goods.name', __('商品名称'))->readonly();
+                $form->display('num', __('数量'));
+                $form->text('shop_goods_spu.name', __('商品规格'))->readonly();
+                $form->text('shop_goods_spu.price', __('商品价格'))->readonly();
 
             })->disableDelete()->disableCreate();
         });

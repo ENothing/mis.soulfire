@@ -26,7 +26,8 @@ class ShopOrderShip extends Field
         $id = $this->form->model()->id;
         $token = csrf_token();
         $this->variables = [
-            'status'=>$this->form->model()->status
+            'status'=>$this->form->model()->status,
+            'refund_id'=>$this->form->model()->refund_id
         ];
 
         $this->script = <<<EOT
@@ -34,15 +35,15 @@ class ShopOrderShip extends Field
           $("#agree_ship").click(function () {
           
                 var express_id = $('select[name="shop_order_delivery[express_id]"]').val();
-                var delivery_n = $("input[name='delivery_n']").val();
+                var delivery_n = $("input[name='shop_order_delivery[delivery_n]']").val();
           
                 $.post('/admin/api/shop_order_ship',{id:"{$id}",express_id:express_id,delivery_n:delivery_n,_token:"{$token}"},function(res){
-                        console.log(res)
-//                    if(res.code == 200){
-//                        alert(res.msg);
-////                        window.location.reload();
-//                    }
-//                    alert(res.msg);
+                    if(res.code == 200){
+                        alert(res.msg);
+                        window.location.reload();
+                        return;
+                    }
+                    alert(res.msg);
                 })
 
           })
