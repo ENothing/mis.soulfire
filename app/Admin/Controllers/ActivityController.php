@@ -36,7 +36,7 @@ class ActivityController extends AdminController
             $filter->expand();
             // 在这里添加字段过滤器
             $filter->like('title',__('标题'));
-            $filter->equal('cate_id',__('活动类型'))->select(ArticleCate::all()->pluck("name","id"));
+            $filter->equal('cate_id',__('活动分类'))->select(ArticleCate::all()->pluck("name","id"));
             $filter->between('start_at',  __('开始时间'))->datetime();
             $filter->between('start_enter_at', __('开始报名时间'))->datetime();
             $filter->between('created_at', __('结束报名时间'))->datetime();
@@ -45,8 +45,14 @@ class ActivityController extends AdminController
         $grid->column('title', __('标题'));
         $grid->column('thumb', __('封面'))->image('', 150, 150);
 //        $grid->column('cate_id', __('活动分类'));
-        $grid->activity_cate()->name(__('活动类型'));
+        $grid->activity_cate()->name(__('活动分类'));
 //        $grid->column('content', __('内容'));
+        $grid->column('charge_type', __('收费类型'))->display(function ($charge_type) {
+
+            return $charge_type == 0 ? "一费制": ($charge_type == 1 ? "AA制":"自费制");
+
+
+        });
         $grid->column('person_limit', __('人数限制'));
         $grid->column('view', __('浏览数'))->sortable();
         $grid->column('likes', __('点赞数'))->sortable();
@@ -125,8 +131,10 @@ class ActivityController extends AdminController
         $form->text('mobile', __('活动联系人电话'));
         $form->number('view', __('浏览数'))->default(0)->min(0);
         $form->number('likes', __('点赞数'))->default(0)->min(0);
+        $form->radio('charge_type', __('收费类型'))->options([0 => '一费制', 1=> 'AA制',2=>"自费制"])->default(0);
         $form->decimal('cur_price', __('现价'))->default(0.00);
         $form->decimal('ori_price', __('原价'))->default(0.00);
+        $form->text('detail_address', __('地址'));
         $states = [
             'on'  => ['value' => 1, 'text' => '是', 'color' => 'success'],
             'off' => ['value' => 0, 'text' => '否', 'color' => 'default'],
