@@ -34,6 +34,8 @@ Route::group([
     $router->resource('shop_order_refunds', 'ShopOrderRefundController');
     $router->resource('user_invite_logs', 'UserInviteLogController');
     $router->resource('activity_order_refunds', 'ActivityOrderRefundController');
+    $router->resource('protocols', 'ProtocolController');
+
 });
 
 Route::group([
