@@ -134,6 +134,7 @@ class ActivityController extends AdminController
         $form->radio('charge_type', __('收费类型'))->options([0 => '一费制', 1=> 'AA制',2=>"自费制"])->default(0);
         $form->decimal('cur_price', __('现价'))->default(0.00);
         $form->decimal('ori_price', __('原价'))->default(0.00);
+        $form->text('price_intro', __('价格说明'));
         $form->text('detail_address', __('地址'));
         $states = [
             'on'  => ['value' => 1, 'text' => '是', 'color' => 'success'],
