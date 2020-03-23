@@ -61,32 +61,36 @@ class ActivityOrderController extends AdminController
 
         $grid->column("status", __('订单状态'))->display(function ($status) {
 
+            if ($this->refund_id != 0) {
+                $order_refund = ActivityOrderRefund::find($this->refund_id);
 
-            $activity_order_refund = ActivityOrderRefund::find($this->refund_id);
-            if ($activity_order_refund && $activity_order_refund->status != ActivityOrderRefund::CANCEL_REFUND && $activity_order_refund->status != ActivityOrderRefund::FAILD_REFUND){
-                switch ($activity_order_refund->status){
+                switch ($order_refund->status) {
                     case 0:
                         return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;发起退款';
                     case 2:
                         return '<span class="label-info" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;退款中';
                     case 3:
                         return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;完成退款';
+                    case 4:
+                        return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;驳回退款';
+                    case 5:
+                        return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;同意退款';
+                    default:
+                        return '<span class="label-danger" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;未知';
                 }
-            }
-
-            switch ($status){
-                case 0:
-                    return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;待付款';
-                case 1:
-                    return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;订单取消';
-                case 2:
-                    return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已付款待发货';
-                case 3:
-                    return '<span class="label-primary" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已发货待收货';
-                case 4:
-                    return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已完成';
-                default:
-                    return '<span class="label-danger" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;未知';
+            } else {
+                switch ($status) {
+                    case 0:
+                        return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;待付款';
+                    case 1:
+                        return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;订单取消';
+                    case 2:
+                        return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已付款';
+                    case 3:
+                        return '<span class="label-primary" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已完成';
+                    default:
+                        return '<span class="label-danger" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;未知';
+                }
             }
         });
 
@@ -218,31 +222,42 @@ class ActivityOrderController extends AdminController
         $form->decimal('real_price', __('实际支付'))->default(0.00)->readonly();
         $form->display('status', __('订单状态'))->with(function ($status){
 
-            $activity_order_refund = ActivityOrderRefund::find($this->refund_id);
-            if ($activity_order_refund && $activity_order_refund->status != ActivityOrderRefund::CANCEL_REFUND && $activity_order_refund->status != ActivityOrderRefund::FAILD_REFUND){
-                switch ($activity_order_refund->status){
+            if ($this->refund_id != 0) {
+
+
+                $order_refund = ActivityOrderRefund::find($this->refund_id);
+                switch ($order_refund->status) {
                     case 0:
                         return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;发起退款';
+                    case 1:
+                        return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;取消退款';
                     case 2:
                         return '<span class="label-info" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;退款中';
                     case 3:
                         return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;完成退款';
+                    case 4:
+                        return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;驳回退款';
+                    case 5:
+                        return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;同意退款';
+                    default:
+                        return '<span class="label-danger" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;未知';
                 }
-            }
 
-            switch ($status){
-                case 0:
-                    return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;待付款';
-                case 1:
-                    return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;订单取消';
-                case 2:
-                    return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已付款待发货';
-                case 3:
-                    return '<span class="label-primary" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已发货待收货';
-                case 4:
-                    return '<span class="label-success" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已完成';
-                default:
-                    return '<span class="label-danger" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;未知';
+
+            } else {
+
+                switch ($status) {
+                    case 0:
+                        return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;待付款';
+                    case 1:
+                        return '<span class="label-default" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;订单取消';
+                    case 2:
+                        return '<span class="label-warning" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已付款';
+                    case 3:
+                        return '<span class="label-primary" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;已完成';
+                    default:
+                        return '<span class="label-danger" style="width: 8px;height: 8px;padding: 0;border-radius: 50%;display: inline-block;"></span>&nbsp;&nbsp;未知';
+                }
             }
 
 

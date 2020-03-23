@@ -37,6 +37,7 @@ class ActivityOrderAgreeRefund extends Field
                     if(res.code == 200){
                         alert(res.msg);
                         window.location.reload();
+                        return;
                     }
                     alert(res.msg);
                 })
@@ -51,6 +52,7 @@ class ActivityOrderAgreeRefund extends Field
                     if(res.code == 200){
                         alert(res.msg);
                         window.location.reload();
+                        return;
                     }
                     alert(res.msg);
                 })
@@ -60,16 +62,30 @@ class ActivityOrderAgreeRefund extends Field
           
                 var reply_reason = $("textarea[name='reply_reason']").val();
                 console.log(reply_reason)
-                $.post('/admin/api/activity_order_finish_refund',{id:"{$id}",_token:"{$token}"},function(res){
+                $.post('/admin/api/activity_order_finish_refund',{id:"{$id}",reply_reason:reply_reason,_token:"{$token}"},function(res){
                     if(res.code == 200){
                         alert(res.msg);
                         window.location.reload();
+                        return;
                     }
                     alert(res.msg);
                 })
 
           })
+          $("#reagree_refund").click(function () {
+          
+                var reply_reason = $("textarea[name='reply_reason']").val();
+                console.log(reply_reason)
+                $.post('/admin/api/activity_order_reagree_refund',{id:"{$id}",reply_reason:reply_reason,_token:"{$token}"},function(res){
+                    if(res.code == 200){
+                        alert(res.msg);
+                        window.location.reload();
+                        return;
+                    }
+                    alert(res.msg);
+                })
 
+          })
 EOT;
 
         return parent::render();

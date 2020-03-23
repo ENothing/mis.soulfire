@@ -77,4 +77,24 @@ class ActivityOrderRefundController extends Controller
         return $this->success();
     }
 
+    function reagree_refund(Request $request){
+
+
+        $id = $request->post('id');
+
+        $order_refund = ActivityOrderRefund::find($id);
+
+        if (is_null($order_refund)){
+
+            return $this->failed("数据不存在");
+        }
+
+        $order_refund->update([
+            'status'=>2,
+        ]);
+
+        return $this->success();
+
+    }
+
 }

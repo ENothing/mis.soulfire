@@ -48,6 +48,7 @@ Route::group([
     $router->post('/activity_order_agree_refund', 'ActivityOrderRefundController@agree_refund');
     $router->post('/activity_order_reject_refund', 'ActivityOrderRefundController@reject_refund');
     $router->post('/activity_order_finish_refund', 'ActivityOrderRefundController@finish_refund');
+    $router->post('/activity_order_reagree_refund', 'ActivityOrderRefundController@reagree_refund');
 
     $router->post('/shop_order_agree_refund', 'ShopOrderRefundController@agree_refund');
     $router->post('/shop_order_pass_refund', 'ShopOrderRefundController@pass_refund');
