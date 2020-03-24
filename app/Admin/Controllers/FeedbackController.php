@@ -85,6 +85,11 @@ class FeedbackController extends AdminController
         });
         $form->text('title', __('标题'))->readonly();
         $form->text('content', __('内容'))->readonly();
+
+
+        $form->multipleImage('pics',"附图")->readonly();
+
+
         $form->footer(function ($footer) {
 
             // 去掉`重置`按钮

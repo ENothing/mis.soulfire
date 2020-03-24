@@ -14,4 +14,10 @@ class Feedback extends AppModel
 
     }
 
+    public function getPicsAttribute($val)
+    {
+        return json_decode($val);
+
+    }
+
 }
