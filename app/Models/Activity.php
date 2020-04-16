@@ -20,7 +20,7 @@ class Activity extends AppModel
 
     public function setActionQrAttribute($value)
     {
-        $this->attributes['thumb'] = "http://".config("filesystems.disks.qiniu.domains.default")."/$value";
+        $this->attributes['action_qr'] = "http://".config("filesystems.disks.qiniu.domains.default")."/$value";
     }
 
 }
