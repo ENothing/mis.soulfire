@@ -136,11 +136,15 @@ class ActivityController extends AdminController
         $form->decimal('ori_price', __('原价'))->default(0.00);
         $form->text('price_intro', __('价格说明'));
         $form->text('detail_address', __('地址'));
+        $form->image('action_qr', __('活动负责人二维码'));
+        $form->text('action_key', __('活动入群关键字'));
+
         $states = [
             'on'  => ['value' => 1, 'text' => '是', 'color' => 'success'],
             'off' => ['value' => 0, 'text' => '否', 'color' => 'default'],
         ];
         $form->switch('is_publish',__('是否发布'))->states($states);
+
         $form->tools(function (Form\Tools $tools) {
 
             // 去掉`删除`按钮
