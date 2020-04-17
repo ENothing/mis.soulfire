@@ -134,6 +134,11 @@ class ShopGoodsController extends AdminController
 
         $form->editor('goods_content', __('商品内容'));
 
+        $form->saved(function (Form $form) {
+
+            var_dump($form->model()->id);
+
+        });
 
         return $form;
     }
