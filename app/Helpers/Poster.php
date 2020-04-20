@@ -71,7 +71,6 @@ trait Poster
         $str3 = sprintf("%.2f",$old_price);
         $box = imagettfbbox(10, 0, $font, $str3);
         $str3_width = $box[4] - $box[6];
-        Log::info("box:".json_encode($str3_width));
         imagettftext($canvas, 10, 0,232 , 469, $opc, $font, $str3);
         imageline($canvas, 230, 463, 230+$str3_width+5, 463, $opc);
 
