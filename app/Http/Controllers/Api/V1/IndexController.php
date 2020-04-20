@@ -18,12 +18,13 @@ class IndexController extends Controller
     public function index()
     {
 
-        $name = "测试商品";
-        $thumb = "http://b-ssl.duitang.com/uploads/item/201903/21/20190321202037_Q5dXF.thumb.700_0.jpeg";
-        $qrcode = Storage::disk("images")->url("logo.jpg");
+        $name = "Jordan官方JORDAN CHINESE NEW YEAR男子针织套头衫新年款CU2323";
+        $thumb = "http://soulfire-media.ericnothing.cn/images/O1CN01LaHvrD1WgghA9wisT_!!0-item_pic.jpg_180x180.jpg";
+        $qrcode = Storage::disk("images")->url("qrcode.jpg");
+        $id = 1;
 
 
-        $this->GoodsPoster($name,$thumb,$qrcode);
+        $this->GoodsPoster($id,$name,$thumb,$qrcode,799.01,1299);
 
 
 
