@@ -8,7 +8,6 @@
 namespace App\Helpers;
 
 
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 trait Poster
