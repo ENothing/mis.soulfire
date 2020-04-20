@@ -53,7 +53,18 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
-
+        'images' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public'),
+            'url' => env('APP_URL').'/images',
+            'visibility' => 'public',
+        ],
+        'fonts' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public'),
+            'url' => env('APP_URL').'/fonts',
+            'visibility' => 'public',
+        ],
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
@@ -72,13 +83,13 @@ return [
         'qiniu' => [
             'driver'  => 'qiniu',
             'domains' => [
-                'default'   => '', //你的七牛域名
+                'default'   => env("DOMAINS"), //你的七牛域名
                 'https'     => '',         //你的HTTPS域名
                 'custom'    => '',                //Useless 没啥用，请直接使用上面的 default 项
             ],
-            'access_key'=> '',  //AccessKey
-            'secret_key'=> '',  //SecretKey
-            'bucket'    => '',  //Bucket名字
+            'access_key'=> env("ACCESS_KEY"),  //AccessKey
+            'secret_key'=> env("SECRET_KEY"),  //SecretKey
+            'bucket'    => env("BUCKET"),  //Bucket名字
             'notify_url'=> '',  //持久化处理回调地址
             'access'    => 'public',  //空间访问控制 public 或 private
 //            'hotlink_prevention_key' => 'afc89ff8bd2axxxxxxxxxxxxxxbb', // CDN 时间戳防盗链的 key。 设置为 null 则不启用本功能。
