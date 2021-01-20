@@ -14,7 +14,7 @@
         "jadekun/sku": "^1.0",
         "laravel-admin-ext/chartjs": "^1.0",
         "laravel-admin-ext/wang-editor": "^1.1",
-        "laravel/framework": "5.7.*",
+        "laravel/framework": "6.20.*",
         "laravel/tinker": "^1.0",
         "overtrue/wechat": "~4.0",
         "predis/predis": "^1.1",
